@@ -1,0 +1,11 @@
+{
+    "java.completion.importOrder": [
+        "#",
+        "org.victorrobotics.scout.server",
+        "java",
+        "com.fasterxml.jackson",
+        "",
+        "#org.junit.jupiter",
+        "org.junit.jupiter"
+    ],
+}
