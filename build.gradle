@@ -1,5 +1,5 @@
 plugins {
-  id 'application'
+  id 'java-library'
 }
 
 repositories {
@@ -17,10 +17,6 @@ java {
   toolchain {
     languageVersion = JavaLanguageVersion.of(17)
   }
-}
-
-application {
-  mainClass = 'org.victorrobotics.scout.server.Main'
 }
 
 test {
