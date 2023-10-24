@@ -7,9 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record Team(@JsonProperty("key") String id,
                    @JsonProperty("team_number") int number,
                    @JsonProperty("nickname") String name,
+                   @JsonProperty("name") String fullName,
+                   @JsonProperty("school_name") String school,
                    @JsonProperty("city") String city,
-                   @JsonProperty("state_prov") String stateProv,
+                   @JsonProperty("state_prov") String province,
                    @JsonProperty("country") String country,
+                   @JsonProperty("postal_code") String postalCode,
                    @JsonProperty("website") String website,
                    @JsonProperty("rookie_year") int rookieYear) {
   public record Robot(@JsonProperty("year") int year,
