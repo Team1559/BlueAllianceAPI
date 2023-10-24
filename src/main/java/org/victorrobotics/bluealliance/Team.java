@@ -6,7 +6,57 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Team {
-  @JsonProperty
+  public static class Robot {
+    @JsonProperty("year")
+    private int year;
+
+    @JsonProperty("robot_name")
+    private String name;
+
+    @JsonProperty("key")
+    private String key;
+
+    @JsonProperty("team_key")
+    private String teamKey;
+
+    public Robot() {}
+
+    public int getYear() {
+      return year;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getKey() {
+      return key;
+    }
+
+    public String getTeamKey() {
+      return teamKey;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(year, name, key, teamKey);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (!(obj instanceof Robot)) return false;
+      Robot other = (Robot) obj;
+      return year == other.year && Objects.equals(name, other.name)
+          && Objects.equals(key, other.key) && Objects.equals(teamKey, other.teamKey);
+    }
+
+    public static Endpoint<List<Robot>> endpointForTeam(String teamKey) {
+      return Endpoint.forList("/team/" + teamKey + "/robots", Robot.class);
+    }
+  }
+
+  @JsonProperty("key")
   private String key;
 
   @JsonProperty("team_number")
@@ -21,82 +71,25 @@ public class Team {
   @JsonProperty("school_name")
   private String school;
 
-  @JsonProperty
+  @JsonProperty("city")
   private String city;
 
   @JsonProperty("state_prov")
   private String province;
 
-  @JsonProperty
+  @JsonProperty("country")
   private String country;
 
   @JsonProperty("postal_code")
   private String postalCode;
 
-  @JsonProperty
+  @JsonProperty("website")
   private String website;
 
   @JsonProperty("rookie_year")
   private int rookieYear;
 
-  public static class Robot {
-    @JsonProperty
-    private int year;
-
-    @JsonProperty("robot_name")
-    private String name;
-
-    @JsonProperty
-    private String key;
-
-    @JsonProperty("team_key")
-    private String teamKey;
-
-    public static Endpoint<List<Robot>> endpointForTeam(String teamKey) {
-      return Endpoint.forList("/team/" + teamKey + "/robots", Robot.class);
-    }
-  }
-
-  public static Endpoint<Team> endpoint(String teamKey) {
-    return Endpoint.forSingle("/team/" + teamKey, Team.class);
-  }
-
-  public static Endpoint<List<Team>> endpointForPage(int page) {
-    return Endpoint.forList("/teams/" + page, Team.class);
-  }
-
-  public static Endpoint<List<Team>> endpointForYear(int year, int page) {
-    return Endpoint.forList("/teams/" + year + "/" + page, Team.class);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Team [key=")
-           .append(key)
-           .append(", number=")
-           .append(number)
-           .append(", name=")
-           .append(name)
-           .append(", fullName=")
-           .append(fullName)
-           .append(", school=")
-           .append(school)
-           .append(", city=")
-           .append(city)
-           .append(", province=")
-           .append(province)
-           .append(", country=")
-           .append(country)
-           .append(", postalCode=")
-           .append(postalCode)
-           .append(", website=")
-           .append(website)
-           .append(", rookieYear=")
-           .append(rookieYear)
-           .append("]");
-    return builder.toString();
-  }
+  public Team() {}
 
   public String getKey() {
     return key;
@@ -159,5 +152,17 @@ public class Team {
         && Objects.equals(province, other.province) && Objects.equals(country, other.country)
         && Objects.equals(postalCode, other.postalCode) && Objects.equals(website, other.website)
         && rookieYear == other.rookieYear;
+  }
+
+  public static Endpoint<Team> endpoint(String teamKey) {
+    return Endpoint.forSingle("/team/" + teamKey, Team.class);
+  }
+
+  public static Endpoint<List<Team>> endpointForPage(int page) {
+    return Endpoint.forList("/teams/" + page, Team.class);
+  }
+
+  public static Endpoint<List<Team>> endpointForYear(int year, int page) {
+    return Endpoint.forList("/teams/" + year + "/" + page, Team.class);
   }
 }
