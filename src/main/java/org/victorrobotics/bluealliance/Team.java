@@ -5,8 +5,125 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Team {
-  public static class Robot {
+public final class Team {
+  public static final class Keys {
+    private Keys() {}
+
+    public static Endpoint<List<String>> endpointForPage(int page) {
+      return Endpoint.forList("/teams/" + page + "/keys", String.class);
+    }
+
+    public static Endpoint<List<String>> endpointForYear(int year, int page) {
+      return Endpoint.forList("/teams/" + year + "/" + page + "/keys", String.class);
+    }
+
+    public static Endpoint<List<String>> endpointForEvent(String eventKey) {
+      return Endpoint.forList("/event/" + eventKey + "/teams/keys", String.class);
+    }
+
+    public static Endpoint<List<String>> endpointForDistrict(String districtKey) {
+      return Endpoint.forList("/district/" + districtKey + "/teams/keys", String.class);
+    }
+  }
+
+  public static final class YearsParticipated {
+    private YearsParticipated() {}
+
+    public static Endpoint<List<Integer>> endpoint(String teamKey) {
+      return Endpoint.forList("/team/" + teamKey + "/years_participated", Integer.class);
+    }
+  }
+
+  public static final class Simple {
+    @JsonProperty("key")
+    private String key;
+
+    @JsonProperty("team_number")
+    private int number;
+
+    @JsonProperty("nickname")
+    private String name;
+
+    @JsonProperty("name")
+    private String fullName;
+
+    @JsonProperty("city")
+    private String city;
+
+    @JsonProperty("state_prov")
+    private String province;
+
+    @JsonProperty("country")
+    private String country;
+
+    public Simple() {}
+
+    public String getKey() {
+      return key;
+    }
+
+    public int getNumber() {
+      return number;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getFullName() {
+      return fullName;
+    }
+
+    public String getCity() {
+      return city;
+    }
+
+    public String getProvince() {
+      return province;
+    }
+
+    public String getCountry() {
+      return country;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(key, number, name, fullName, city, province, country);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (!(obj instanceof Simple)) return false;
+      Simple other = (Simple) obj;
+      return Objects.equals(key, other.key) && number == other.number
+          && Objects.equals(name, other.name) && Objects.equals(fullName, other.fullName)
+          && Objects.equals(city, other.city) && Objects.equals(province, other.province)
+          && Objects.equals(country, other.country);
+    }
+
+    public static Endpoint<Team.Simple> endpoint(String teamKey) {
+      return Endpoint.forSingle("/team/" + teamKey + "/simple", Team.Simple.class);
+    }
+
+    public static Endpoint<List<Team.Simple>> endpointForPage(int page) {
+      return Endpoint.forList("/teams/" + page + "/simple", Team.Simple.class);
+    }
+
+    public static Endpoint<List<Team.Simple>> endpointForYear(int year, int page) {
+      return Endpoint.forList("/teams/" + year + "/" + page + "/simple", Team.Simple.class);
+    }
+
+    public static Endpoint<List<Team.Simple>> endpointForEvent(String eventKey) {
+      return Endpoint.forList("/event/" + eventKey + "/teams/simple", Team.Simple.class);
+    }
+
+    public static Endpoint<List<Team.Simple>> endpointForDistrict(String districtKey) {
+      return Endpoint.forList("/district/" + districtKey + "/teams/simple", Team.Simple.class);
+    }
+  }
+
+  public static final class Robot {
     @JsonProperty("year")
     private int year;
 
@@ -164,5 +281,13 @@ public class Team {
 
   public static Endpoint<List<Team>> endpointForYear(int year, int page) {
     return Endpoint.forList("/teams/" + year + "/" + page, Team.class);
+  }
+
+  public static Endpoint<List<Team>> endpointForEvent(String eventKey) {
+    return Endpoint.forList("/event/" + eventKey + "/teams", Team.class);
+  }
+
+  public static Endpoint<List<Team>> endpointForDistrict(String districtKey) {
+    return Endpoint.forList("/district/" + districtKey + "/teams", Team.class);
   }
 }
