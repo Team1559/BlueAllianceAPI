@@ -56,13 +56,8 @@ public final class Endpoint<T> implements Supplier<T> {
   private final HttpRequest.Builder requestBuilder;
   private final ObjectReader        jsonReader;
 
-  private T      value;
-  private String eTag;
-  private long   minRefreshTime;
-
-  private Endpoint(String endpoint, Class<?> clazz, Type type) {
-    this(endpoint, type.readerFor(clazz));
-  }
+  private T    value;
+  private long minRefreshTime;
 
   private Endpoint(String endpoint, ObjectReader reader) {
     this.jsonReader = reader;
@@ -78,56 +73,51 @@ public final class Endpoint<T> implements Supplier<T> {
     return value;
   }
 
-  public CompletableFuture<Boolean> refresh() {
-    if (eTag != null) {
-      requestBuilder.setHeader("If-None-Match", eTag);
-    }
-
+  public CompletableFuture<T> request() {
     if (System.currentTimeMillis() < minRefreshTime) {
-      return CompletableFuture.completedFuture(false);
+      return CompletableFuture.completedFuture(value);
     }
 
     return HTTP_CLIENT.sendAsync(requestBuilder.build(), BodyHandlers.ofInputStream())
                       .thenApply(this::handleResponse);
   }
 
-  private boolean handleResponse(HttpResponse<InputStream> response) {
+  private T handleResponse(HttpResponse<InputStream> response) {
     int statusCode = response.statusCode();
-    if (statusCode != 200 && statusCode != 304) return false;
+    if (statusCode != 200 && statusCode != 304) return value;
 
     HttpHeaders headers = response.headers();
     headers.firstValue("etag")
-           .ifPresent(str -> eTag = str);
+           .ifPresent(eTag -> requestBuilder.setHeader("If-None-Match", eTag));
     headers.firstValue("cache-control")
-           .ifPresent(str -> {
-             int beginIndex = str.indexOf("max-age=");
-             if (beginIndex == -1) return;
-             beginIndex += 8;
-             int endIndex = beginIndex;
-             int len = str.length();
-             char c;
-             while (endIndex < len && (c = str.charAt(endIndex)) >= '0' && c <= '9') {
-               endIndex++;
-             }
-             int maxAge = Integer.parseInt(str.substring(beginIndex, endIndex));
-             minRefreshTime = System.currentTimeMillis() + maxAge * 1000;
-           });
+           .ifPresent(this::updateRefreshTime);
 
-    if (statusCode != 200) return false;
+    if (statusCode != 200) return value;
 
-    T result;
     try (InputStream body = response.body()) {
-      result = jsonReader.readValue(body);
-    } catch (IOException e) {
-      e.printStackTrace();
-      return false;
+      T result = jsonReader.readValue(body);
+      if (result != null && !result.equals(value)) {
+        value = result;
+      }
+    } catch (IOException e) {}
+
+    return value;
+  }
+
+  private void updateRefreshTime(String str) {
+    int beginIndex = str.indexOf("max-age=");
+    if (beginIndex == -1) return;
+    beginIndex += 8;
+
+    int endIndex = beginIndex;
+    int len = str.length();
+    char c;
+    while (endIndex < len && (c = str.charAt(endIndex)) >= '0' && c <= '9') {
+      endIndex++;
     }
 
-    if (result != null && !result.equals(value)) {
-      value = result;
-      return true;
-    }
-    return false;
+    int maxAge = Integer.parseInt(str.substring(beginIndex, endIndex));
+    minRefreshTime = System.currentTimeMillis() + maxAge * 1000;
   }
 
   @SuppressWarnings("unchecked")
