@@ -1,5 +1,6 @@
 package org.victorrobotics.bluealliance;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -65,7 +66,7 @@ public final class Media {
   }
 
   public Map<String, String> getDetails() {
-    return details;
+    return Collections.unmodifiableMap(details);
   }
 
   public boolean isHighQuality() {
