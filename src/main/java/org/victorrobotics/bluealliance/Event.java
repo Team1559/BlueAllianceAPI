@@ -155,6 +155,189 @@ public final class Event {
     }
   }
 
+  public static final class PlayoffAlliance {
+    public static final class Backup {
+      @JsonProperty("in")
+      private String teamIn;
+
+      @JsonProperty("out")
+      private String teamOut;
+
+      public Backup() {}
+
+      public String getTeamIn() {
+        return teamIn;
+      }
+
+      public String getTeamOut() {
+        return teamOut;
+      }
+
+      @Override
+      public int hashCode() {
+        return Objects.hash(teamIn, teamOut);
+      }
+
+      @Override
+      public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Backup)) return false;
+        Backup other = (Backup) obj;
+        return Objects.equals(teamIn, other.teamIn) && Objects.equals(teamOut, other.teamOut);
+      }
+    }
+
+    public static final class Status {
+      @JsonProperty("playoff_average")
+      private double playoffAverage;
+
+      @JsonProperty("level")
+      private String level;
+
+      @JsonProperty("record")
+      private WinLossRecord totalRecord;
+
+      @JsonProperty("currentLevelRecord")
+      private WinLossRecord currentRecord;
+
+      @JsonProperty("status")
+      private String statusStr;
+
+      public Status() {}
+
+      public double getPlayoffAverage() {
+        return playoffAverage;
+      }
+
+      public String getLevel() {
+        return level;
+      }
+
+      public WinLossRecord getTotalRecord() {
+        return totalRecord;
+      }
+
+      public WinLossRecord getCurrentRecord() {
+        return currentRecord;
+      }
+
+      public String getStatusStr() {
+        return statusStr;
+      }
+
+      @Override
+      public int hashCode() {
+        return Objects.hash(playoffAverage, level, totalRecord, currentRecord, statusStr);
+      }
+
+      @Override
+      public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Status)) return false;
+        Status other = (Status) obj;
+        return Double.doubleToLongBits(playoffAverage)
+            == Double.doubleToLongBits(other.playoffAverage) && Objects.equals(level, other.level)
+            && Objects.equals(totalRecord, other.totalRecord)
+            && Objects.equals(currentRecord, other.currentRecord)
+            && Objects.equals(statusStr, other.statusStr);
+      }
+    }
+
+    @JsonProperty("name")
+    private String name;
+
+    @JsonProperty("backup")
+    private Backup backup;
+
+    @JsonProperty("declines")
+    private List<String> declinedTeams;
+
+    @JsonProperty("picks")
+    private List<String> teams;
+
+    @JsonProperty("status")
+    private Status status;
+
+    public PlayoffAlliance() {}
+
+    public String getName() {
+      return name;
+    }
+
+    public Backup getBackup() {
+      return backup;
+    }
+
+    public List<String> getDeclinedTeams() {
+      return Collections.unmodifiableList(declinedTeams);
+    }
+
+    public List<String> getTeams() {
+      return Collections.unmodifiableList(teams);
+    }
+
+    public Status getStatus() {
+      return status;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(name, backup, declinedTeams, teams, status);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (!(obj instanceof PlayoffAlliance)) return false;
+      PlayoffAlliance other = (PlayoffAlliance) obj;
+      return Objects.equals(name, other.name) && Objects.equals(backup, other.backup)
+          && Objects.equals(declinedTeams, other.declinedTeams)
+          && Objects.equals(teams, other.teams) && Objects.equals(status, other.status);
+    }
+
+    public static Endpoint<List<PlayoffAlliance>> endpoint(String eventKey) {
+      return Endpoint.forList("/event/" + eventKey + "/alliance", PlayoffAlliance.class);
+    }
+  }
+
+  public static final class WinLossRecord {
+    @JsonProperty("losses")
+    private int losses;
+
+    @JsonProperty("wins")
+    private int wins;
+
+    @JsonProperty("ties")
+    private int ties;
+
+    public WinLossRecord() {}
+
+    public int getLosses() {
+      return losses;
+    }
+
+    public int getWins() {
+      return wins;
+    }
+
+    public int getTies() {
+      return ties;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(losses, wins, ties);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (!(obj instanceof WinLossRecord)) return false;
+      WinLossRecord other = (WinLossRecord) obj;
+      return losses == other.losses && wins == other.wins && ties == other.ties;
+    }
+  }
+
   public static final class Webcast {
     public enum Type {
       YOUTUBE("youtube"),
