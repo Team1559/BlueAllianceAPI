@@ -51,7 +51,8 @@ public final class Endpoint<T> implements Supplier<T> {
 
   private static final HttpClient   HTTP_CLIENT        = HttpClient.newHttpClient();
   private static final ObjectMapper JSON_OBJECT_MAPPER =
-      new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+      new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                        .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
 
   private final HttpRequest.Builder requestBuilder;
   private final ObjectReader        jsonReader;
@@ -99,7 +100,9 @@ public final class Endpoint<T> implements Supplier<T> {
       if (result != null && !result.equals(value)) {
         value = result;
       }
-    } catch (IOException e) {}
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     return value;
   }
