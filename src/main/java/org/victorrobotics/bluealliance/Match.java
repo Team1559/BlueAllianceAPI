@@ -425,13 +425,4 @@ public final class Match {
   public static Endpoint<List<Match>> endpointForTeamAtEvent(String teamKey, String eventKey) {
     return Endpoint.forList("/team/" + teamKey + "/event/" + eventKey + "/matches", Match.class);
   }
-
-  public static void main(String... args) throws JsonProcessingException {
-    System.out.println(new ObjectMapper().writerWithDefaultPrettyPrinter()
-                                         .writeValueAsString(Match.Simple.endpointForTeamAtEvent("frc1559",
-                                                                                                 "2023nyrr")
-                                                                         .request()
-                                                                         .join()));
-  }
-
 }

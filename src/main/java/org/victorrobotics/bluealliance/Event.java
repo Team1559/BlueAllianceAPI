@@ -46,7 +46,7 @@ public final class Event {
     private Type type;
 
     @JsonProperty("district")
-    private DistrictList district;
+    private District district;
 
     @JsonProperty("city")
     private String city;
@@ -86,7 +86,7 @@ public final class Event {
       return type;
     }
 
-    public DistrictList getDistrict() {
+    public District getDistrict() {
       return district;
     }
 
@@ -294,7 +294,7 @@ public final class Event {
   private Type type;
 
   @JsonProperty("district")
-  private DistrictList district;
+  private District district;
 
   @JsonProperty("city")
   private String city;
@@ -388,7 +388,7 @@ public final class Event {
     return type;
   }
 
-  public DistrictList getDistrict() {
+  public District getDistrict() {
     return district;
   }
 
