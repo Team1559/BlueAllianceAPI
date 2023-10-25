@@ -126,7 +126,7 @@ public final class Endpoint<T> implements Supplier<T> {
   @SuppressWarnings("unchecked")
   static <T> Endpoint<T> forSingle(String endpoint, Class<T> clazz) {
     WeakReference<Endpoint<?>> value = ENDPOINTS.get(endpoint);
-    if (value == null || value.refersTo(null)) {
+    if (value == null || value.get() == null) {
       value = new WeakReference<>(new Endpoint<>(endpoint, JSON_OBJECT_MAPPER.readerFor(clazz)));
       ENDPOINTS.put(endpoint, value);
     }
@@ -136,7 +136,7 @@ public final class Endpoint<T> implements Supplier<T> {
   @SuppressWarnings("unchecked")
   static <T> Endpoint<List<T>> forList(String endpoint, Class<T> clazz) {
     WeakReference<Endpoint<?>> value = ENDPOINTS.get(endpoint);
-    if (value == null || value.refersTo(null)) {
+    if (value == null || value.get() == null) {
       value =
           new WeakReference<>(new Endpoint<>(endpoint, JSON_OBJECT_MAPPER.readerForListOf(clazz)));
       ENDPOINTS.put(endpoint, value);
