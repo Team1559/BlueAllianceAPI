@@ -11,6 +11,108 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public class Event {
+  public static class Simple {
+    @JsonProperty("key")
+    private String key;
+
+    @JsonProperty("name")
+    private String name;
+
+    @JsonProperty("event_code")
+    private String code;
+
+    @JsonProperty("event_type")
+    private Type type;
+
+    @JsonProperty("district")
+    private DistrictList district;
+
+    @JsonProperty("city")
+    private String city;
+
+    @JsonProperty("state_prov")
+    private String stateProv;
+
+    @JsonProperty("country")
+    private String country;
+
+    @JsonProperty("start_date")
+    @JsonFormat(pattern = "yyyy-mm-dd")
+    private Date startDate;
+
+    @JsonProperty("end_date")
+    @JsonFormat(pattern = "yyyy-mm-dd")
+    private Date endDate;
+
+    @JsonProperty("year")
+    private int year;
+
+    public Simple() {}
+
+    public String getKey() {
+      return key;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getCode() {
+      return code;
+    }
+
+    public Type getType() {
+      return type;
+    }
+
+    public DistrictList getDistrict() {
+      return district;
+    }
+
+    public String getCity() {
+      return city;
+    }
+
+    public String getStateProv() {
+      return stateProv;
+    }
+
+    public String getCountry() {
+      return country;
+    }
+
+    public Date getStartDate() {
+      return startDate;
+    }
+
+    public Date getEndDate() {
+      return endDate;
+    }
+
+    public int getYear() {
+      return year;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(key, name, code, type, district, city, stateProv, country, startDate,
+                          endDate, year);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (!(obj instanceof Simple)) return false;
+      Simple other = (Simple) obj;
+      return Objects.equals(key, other.key) && Objects.equals(name, other.name)
+          && Objects.equals(code, other.code) && type == other.type
+          && Objects.equals(district, other.district) && Objects.equals(city, other.city)
+          && Objects.equals(stateProv, other.stateProv) && Objects.equals(country, other.country)
+          && Objects.equals(startDate, other.startDate) && Objects.equals(endDate, other.endDate)
+          && year == other.year;
+    }
+  }
+
   public enum Type {
     REGIONAL(0),
     DISTRICT(1),
@@ -345,8 +447,10 @@ public class Event {
 
   @Override
   public int hashCode() {
-    return Objects.hash(key, name, type, district, city, stateProv, country, startDate, endDate,
-                        year, week, locationName, timezone, website, divisionKeys, parentEventKey,
+    return Objects.hash(key, name, code, type, district, city, stateProv, country, startDate,
+                        endDate, year, shortName, typeString, week, address, postalCode,
+                        gmapsPlaceID, gmapsURL, latitude, longitude, locationName, timezone,
+                        website, firstID, firstCode, webcasts, divisionKeys, parentEventKey,
                         playoffType);
   }
 
@@ -355,13 +459,22 @@ public class Event {
     if (this == obj) return true;
     if (!(obj instanceof Event)) return false;
     Event other = (Event) obj;
-    return Objects.equals(key, other.key) && Objects.equals(name, other.name) && type == other.type
+    return Objects.equals(key, other.key) && Objects.equals(name, other.name)
+        && Objects.equals(code, other.code) && type == other.type
         && Objects.equals(district, other.district) && Objects.equals(city, other.city)
         && Objects.equals(stateProv, other.stateProv) && Objects.equals(country, other.country)
         && Objects.equals(startDate, other.startDate) && Objects.equals(endDate, other.endDate)
-        && year == other.year && Objects.equals(week, other.week)
+        && year == other.year && Objects.equals(shortName, other.shortName)
+        && Objects.equals(typeString, other.typeString) && Objects.equals(week, other.week)
+        && Objects.equals(address, other.address) && Objects.equals(postalCode, other.postalCode)
+        && Objects.equals(gmapsPlaceID, other.gmapsPlaceID)
+        && Objects.equals(gmapsURL, other.gmapsURL)
+        && Double.doubleToLongBits(latitude) == Double.doubleToLongBits(other.latitude)
+        && Double.doubleToLongBits(longitude) == Double.doubleToLongBits(other.longitude)
         && Objects.equals(locationName, other.locationName)
         && Objects.equals(timezone, other.timezone) && Objects.equals(website, other.website)
+        && Objects.equals(firstID, other.firstID) && Objects.equals(firstCode, other.firstCode)
+        && Objects.equals(webcasts, other.webcasts)
         && Objects.equals(divisionKeys, other.divisionKeys)
         && Objects.equals(parentEventKey, other.parentEventKey) && playoffType == other.playoffType;
   }
