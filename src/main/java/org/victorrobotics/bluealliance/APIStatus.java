@@ -3,25 +3,19 @@ package org.victorrobotics.bluealliance;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class APIStatus {
-  public static class AppVersion {
-    @JsonProperty("min_app_version")
-    private int minimum;
+public final class APIStatus {
+  public static final class AppVersion {
+    public final int minimum;
+    public final int latest;
 
-    @JsonProperty("latest_app_version")
-    private int latest;
-
-    public AppVersion() {}
-
-    public int getMinimum() {
-      return minimum;
-    }
-
-    public int getLatest() {
-      return latest;
+    @JsonCreator
+    AppVersion(@JsonProperty("min_app_version") int minimum,
+                       @JsonProperty("latest_app_version") int latest) {
+      this.minimum = minimum;
+      this.latest = latest;
     }
 
     @Override
@@ -49,49 +43,26 @@ public class APIStatus {
     }
   }
 
-  @JsonProperty("current_season")
-  private int currentSeason;
+  public final int          currentSeason;
+  public final int          maxSeason;
+  public final boolean      isDatafeedDown;
+  public final List<String> downEvents;
+  public final AppVersion   iosVersion;
+  public final AppVersion   androidVersion;
 
-  @JsonProperty("max_season")
-  private int maxSeason;
-
-  @JsonProperty("is_datafeed_down")
-  private boolean isDatafeedDown;
-
-  @JsonProperty("down_events")
-  private List<String> downEvents;
-
-  @JsonProperty("ios")
-  private AppVersion iosVersion;
-
-  @JsonProperty("android")
-  private AppVersion androidVersion;
-
-  public APIStatus() {}
-
-  public int getCurrentSeason() {
-    return currentSeason;
-  }
-
-  public int getMaxSeason() {
-    return maxSeason;
-  }
-
-  @JsonIgnore // grabbed by default during serialization
-  public boolean isDatafeedDown() {
-    return isDatafeedDown;
-  }
-
-  public List<String> getDownEvents() {
-    return downEvents;
-  }
-
-  public AppVersion getIosVersion() {
-    return iosVersion;
-  }
-
-  public AppVersion getAndroidVersion() {
-    return androidVersion;
+  @JsonCreator
+  APIStatus(@JsonProperty("current_season") int currentSeason,
+                    @JsonProperty("max_season") int maxSeason,
+                    @JsonProperty("is_datafeed_down") boolean isDatafeedDown,
+                    @JsonProperty("down_events") List<String> downEvents,
+                    @JsonProperty("ios") AppVersion iosVersion,
+                    @JsonProperty("android") AppVersion androidVersion) {
+    this.currentSeason = currentSeason;
+    this.maxSeason = maxSeason;
+    this.isDatafeedDown = isDatafeedDown;
+    this.downEvents = downEvents == null ? null : List.copyOf(downEvents);
+    this.iosVersion = iosVersion;
+    this.androidVersion = androidVersion;
   }
 
   @Override

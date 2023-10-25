@@ -1,13 +1,12 @@
 package org.victorrobotics.bluealliance;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -33,85 +32,67 @@ public final class Event {
   }
 
   public static final class Simple {
-    @JsonProperty("key")
-    private String key;
+    public final String   key;
+    public final String   name;
+    public final String   code;
+    public final Type     type;
+    public final District district;
+    public final String   city;
+    public final String   stateProv;
+    public final String   country;
+    public final Date     startDate;
+    public final Date     endDate;
+    public final int      year;
 
-    @JsonProperty("name")
-    private String name;
-
-    @JsonProperty("event_code")
-    private String code;
-
-    @JsonProperty("event_type")
-    private Type type;
-
-    @JsonProperty("district")
-    private District district;
-
-    @JsonProperty("city")
-    private String city;
-
-    @JsonProperty("state_prov")
-    private String stateProv;
-
-    @JsonProperty("country")
-    private String country;
-
-    @JsonProperty("start_date")
-    @JsonFormat(pattern = "yyyy-mm-dd")
-    private Date startDate;
-
-    @JsonProperty("end_date")
-    @JsonFormat(pattern = "yyyy-mm-dd")
-    private Date endDate;
-
-    @JsonProperty("year")
-    private int year;
-
-    public Simple() {}
-
-    public String getKey() {
-      return key;
+    @JsonCreator
+    Simple(@JsonProperty("key") String key, @JsonProperty("name") String name,
+                   @JsonProperty("event_code") String code, @JsonProperty("event_type") Type type,
+                   @JsonProperty("district") District district, @JsonProperty("city") String city,
+                   @JsonProperty("state_prov") String stateProv,
+                   @JsonProperty("country") String country,
+                   @JsonProperty("start_date") @JsonFormat(pattern = "yyyy-mm-dd") Date startDate,
+                   @JsonProperty("end_date") @JsonFormat(pattern = "yyyy-mm-dd") Date endDate,
+                   @JsonProperty("year") int year) {
+      this.key = key;
+      this.name = name;
+      this.code = code;
+      this.type = type;
+      this.district = district;
+      this.city = city;
+      this.stateProv = stateProv;
+      this.country = country;
+      this.startDate = startDate;
+      this.endDate = endDate;
+      this.year = year;
     }
 
-    public String getName() {
-      return name;
-    }
-
-    public String getCode() {
-      return code;
-    }
-
-    public Type getType() {
-      return type;
-    }
-
-    public District getDistrict() {
-      return district;
-    }
-
-    public String getCity() {
-      return city;
-    }
-
-    public String getStateProv() {
-      return stateProv;
-    }
-
-    public String getCountry() {
-      return country;
-    }
-
-    public Date getStartDate() {
-      return startDate;
-    }
-
-    public Date getEndDate() {
-      return endDate;
-    }
-
-    public int getYear() {
-      return year;
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("Simple [key=")
+             .append(key)
+             .append(", name=")
+             .append(name)
+             .append(", code=")
+             .append(code)
+             .append(", type=")
+             .append(type)
+             .append(", district=")
+             .append(district)
+             .append(", city=")
+             .append(city)
+             .append(", stateProv=")
+             .append(stateProv)
+             .append(", country=")
+             .append(country)
+             .append(", startDate=")
+             .append(startDate)
+             .append(", endDate=")
+             .append(endDate)
+             .append(", year=")
+             .append(year)
+             .append("]");
+      return builder.toString();
     }
 
     @Override
@@ -157,20 +138,24 @@ public final class Event {
 
   public static final class PlayoffAlliance {
     public static final class Backup {
-      @JsonProperty("in")
-      private String teamIn;
+      public final String teamIn;
+      public final String teamOut;
 
-      @JsonProperty("out")
-      private String teamOut;
-
-      public Backup() {}
-
-      public String getTeamIn() {
-        return teamIn;
+      @JsonCreator
+      Backup(@JsonProperty("in") String teamIn, @JsonProperty("out") String teamOut) {
+        this.teamIn = teamIn;
+        this.teamOut = teamOut;
       }
 
-      public String getTeamOut() {
-        return teamOut;
+      @Override
+      public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Backup [teamIn=")
+               .append(teamIn)
+               .append(", teamOut=")
+               .append(teamOut)
+               .append("]");
+        return builder.toString();
       }
 
       @Override
@@ -188,41 +173,40 @@ public final class Event {
     }
 
     public static final class Status {
-      @JsonProperty("playoff_average")
-      private double playoffAverage;
+      public final double        playoffAverage;
+      public final String        level;
+      public final WinLossRecord totalRecord;
+      public final WinLossRecord currentRecord;
+      public final String        statusStr;
 
-      @JsonProperty("level")
-      private String level;
-
-      @JsonProperty("record")
-      private WinLossRecord totalRecord;
-
-      @JsonProperty("currentLevelRecord")
-      private WinLossRecord currentRecord;
-
-      @JsonProperty("status")
-      private String statusStr;
-
-      public Status() {}
-
-      public double getPlayoffAverage() {
-        return playoffAverage;
+      @JsonCreator
+      Status(@JsonProperty("playoff_average") double playoffAverage,
+                     @JsonProperty("level") String level,
+                     @JsonProperty("record") WinLossRecord totalRecord,
+                     @JsonProperty("current_level_record") WinLossRecord currentRecord,
+                     @JsonProperty("status") String statusStr) {
+        this.playoffAverage = playoffAverage;
+        this.level = level;
+        this.totalRecord = totalRecord;
+        this.currentRecord = currentRecord;
+        this.statusStr = statusStr;
       }
 
-      public String getLevel() {
-        return level;
-      }
-
-      public WinLossRecord getTotalRecord() {
-        return totalRecord;
-      }
-
-      public WinLossRecord getCurrentRecord() {
-        return currentRecord;
-      }
-
-      public String getStatusStr() {
-        return statusStr;
+      @Override
+      public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Status [playoffAverage=")
+               .append(playoffAverage)
+               .append(", level=")
+               .append(level)
+               .append(", totalRecord=")
+               .append(totalRecord)
+               .append(", currentRecord=")
+               .append(currentRecord)
+               .append(", statusStr=")
+               .append(statusStr)
+               .append("]");
+        return builder.toString();
       }
 
       @Override
@@ -243,41 +227,40 @@ public final class Event {
       }
     }
 
-    @JsonProperty("name")
-    private String name;
+    public final String       name;
+    public final Backup       backup;
+    public final List<String> declinedTeams;
+    public final List<String> teams;
+    public final Status       status;
 
-    @JsonProperty("backup")
-    private Backup backup;
-
-    @JsonProperty("declines")
-    private List<String> declinedTeams;
-
-    @JsonProperty("picks")
-    private List<String> teams;
-
-    @JsonProperty("status")
-    private Status status;
-
-    public PlayoffAlliance() {}
-
-    public String getName() {
-      return name;
+    @JsonCreator
+    PlayoffAlliance(@JsonProperty("name") String name,
+                            @JsonProperty("backup") Backup backup,
+                            @JsonProperty("declines") List<String> declinedTeams,
+                            @JsonProperty("picks") List<String> teams,
+                            @JsonProperty("status") Status status) {
+      this.name = name;
+      this.backup = backup;
+      this.declinedTeams = declinedTeams == null ? null : List.copyOf(declinedTeams);
+      this.teams = teams == null ? null : List.copyOf(teams);
+      this.status = status;
     }
 
-    public Backup getBackup() {
-      return backup;
-    }
-
-    public List<String> getDeclinedTeams() {
-      return Collections.unmodifiableList(declinedTeams);
-    }
-
-    public List<String> getTeams() {
-      return Collections.unmodifiableList(teams);
-    }
-
-    public Status getStatus() {
-      return status;
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("PlayoffAlliance [name=")
+             .append(name)
+             .append(", backup=")
+             .append(backup)
+             .append(", declinedTeams=")
+             .append(declinedTeams)
+             .append(", teams=")
+             .append(teams)
+             .append(", status=")
+             .append(status)
+             .append("]");
+      return builder.toString();
     }
 
     @Override
@@ -301,27 +284,29 @@ public final class Event {
   }
 
   public static final class WinLossRecord {
-    @JsonProperty("losses")
-    private int losses;
+    public final int losses;
+    public final int wins;
+    public final int ties;
 
-    @JsonProperty("wins")
-    private int wins;
-
-    @JsonProperty("ties")
-    private int ties;
-
-    public WinLossRecord() {}
-
-    public int getLosses() {
-      return losses;
+    @JsonCreator
+    WinLossRecord(@JsonProperty("losses") int losses, @JsonProperty("wins") int wins,
+                          @JsonProperty("ties") int ties) {
+      this.losses = losses;
+      this.wins = wins;
+      this.ties = ties;
     }
 
-    public int getWins() {
-      return wins;
-    }
-
-    public int getTies() {
-      return ties;
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("WinLossRecord [losses=")
+             .append(losses)
+             .append(", wins=")
+             .append(wins)
+             .append(", ties=")
+             .append(ties)
+             .append("]");
+      return builder.toString();
     }
 
     @Override
@@ -364,35 +349,34 @@ public final class Event {
       }
     }
 
-    @JsonProperty("type")
-    private Type type;
+    public final Type   type;
+    public final String channel;
+    public final Date   date;
+    public final String file;
 
-    @JsonProperty("channel")
-    private String channel;
-
-    @JsonProperty("date")
-    @JsonFormat(pattern = "yyyy-mm-dd")
-    private Date date;
-
-    @JsonProperty("file")
-    private String file;
-
-    public Webcast() {}
-
-    public Type getType() {
-      return type;
+    @JsonCreator
+    Webcast(@JsonProperty("type") Type type, @JsonProperty("channel") String channel,
+                    @JsonProperty("date") @JsonFormat(pattern = "yyyy-mm-dd") Date date,
+                    @JsonProperty("file") String file) {
+      this.type = type;
+      this.channel = channel;
+      this.date = date;
+      this.file = file;
     }
 
-    public String getChannel() {
-      return channel;
-    }
-
-    public Date getDate() {
-      return date;
-    }
-
-    public String getFile() {
-      return file;
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("Webcast [type=")
+             .append(type)
+             .append(", channel=")
+             .append(channel)
+             .append(", date=")
+             .append(date)
+             .append(", file=")
+             .append(file)
+             .append("]");
+      return builder.toString();
     }
 
     @Override
@@ -456,224 +440,166 @@ public final class Event {
     @JsonValue
     public final int id;
 
-    public final String value;
+    public final String description;
 
-    PlayoffType(int id, String value) {
+    PlayoffType(int id, String description) {
       this.id = id;
-      this.value = value;
+      this.description = description;
     }
   }
 
-  @JsonProperty("key")
-  private String key;
+  public final String        key;
+  public final String        name;
+  public final String        code;
+  public final Type          type;
+  public final District      district;
+  public final String        city;
+  public final String        stateProv;
+  public final String        country;
+  public final Date          startDate;
+  public final Date          endDate;
+  public final int           year;
+  public final String        shortName;
+  public final String        typeString;
+  public final Integer       week;
+  public final String        address;
+  public final String        postalCode;
+  public final String        gmapsPlaceID;
+  public final String        gmapsURL;
+  public final double        latitude;
+  public final double        longitude;
+  public final String        locationName;
+  public final String        timezone;
+  public final String        website;
+  public final String        firstID;
+  public final String        firstCode;
+  public final List<Webcast> webcasts;
+  public final List<String>  divisionKeys;
+  public final String        parentEventKey;
+  public final PlayoffType   playoffType;
+  public final String        playoffTypeDescription;
 
-  @JsonProperty("name")
-  private String name;
-
-  @JsonProperty("event_code")
-  private String code;
-
-  @JsonProperty("event_type")
-  private Type type;
-
-  @JsonProperty("district")
-  private District district;
-
-  @JsonProperty("city")
-  private String city;
-
-  @JsonProperty("state_prov")
-  private String stateProv;
-
-  @JsonProperty("country")
-  private String country;
-
-  @JsonProperty("start_date")
-  @JsonFormat(pattern = "yyyy-mm-dd")
-  private Date startDate;
-
-  @JsonProperty("end_date")
-  @JsonFormat(pattern = "yyyy-mm-dd")
-  private Date endDate;
-
-  @JsonProperty("year")
-  private int year;
-
-  @JsonProperty("short_name")
-  private String shortName;
-
-  @JsonProperty("event_type_string")
-  private String typeString;
-
-  @JsonProperty("week")
-  private Integer week;
-
-  @JsonProperty("address")
-  private String address;
-
-  @JsonProperty("postal_code")
-  private String postalCode;
-
-  @JsonProperty("gmaps_place_id")
-  private String gmapsPlaceID;
-
-  @JsonProperty("gmaps_url")
-  private String gmapsURL;
-
-  @JsonProperty("lat")
-  private double latitude;
-
-  @JsonProperty("lng")
-  private double longitude;
-
-  @JsonProperty("location_name")
-  private String locationName;
-
-  @JsonProperty("timezone")
-  private String timezone;
-
-  @JsonProperty("website")
-  private String website;
-
-  @JsonProperty("first_event_id")
-  private String firstID;
-
-  @JsonProperty("first_event_code")
-  private String firstCode;
-
-  @JsonProperty("webcasts")
-  private List<Webcast> webcasts;
-
-  @JsonProperty("division_keys")
-  private List<String> divisionKeys;
-
-  @JsonProperty("parent_event_key")
-  private String parentEventKey;
-
-  @JsonProperty("playoff_type")
-  private PlayoffType playoffType;
-
-  public Event() {}
-
-  public String getKey() {
-    return key;
+  @JsonCreator
+  Event(@JsonProperty("key") String key, @JsonProperty("name") String name,
+                @JsonProperty("event_code") String code, @JsonProperty("event_type") Type type,
+                @JsonProperty("district") District district, @JsonProperty("city") String city,
+                @JsonProperty("state_prov") String stateProv,
+                @JsonProperty("country") String country,
+                @JsonProperty("start_date") @JsonFormat(pattern = "yyyy-mm-dd") Date startDate,
+                @JsonProperty("end_date") @JsonFormat(pattern = "yyyy-mm-dd") Date endDate,
+                @JsonProperty("year") int year, @JsonProperty("short_name") String shortName,
+                @JsonProperty("event_type_string") String typeString,
+                @JsonProperty("week") Integer week, @JsonProperty("address") String address,
+                @JsonProperty("postal_code") String postalCode,
+                @JsonProperty("gmaps_place_id") String gmapsPlaceID,
+                @JsonProperty("gmaps_url") String gmapsURL, @JsonProperty("lat") double latitude,
+                @JsonProperty("lng") double longitude,
+                @JsonProperty("location_name") String locationName,
+                @JsonProperty("timezone") String timezone, @JsonProperty("website") String website,
+                @JsonProperty("first_event_id") String firstID,
+                @JsonProperty("first_event_code") String firstCode,
+                @JsonProperty("webcasts") List<Webcast> webcasts,
+                @JsonProperty("division_keys") List<String> divisionKeys,
+                @JsonProperty("parent_event_key") String parentEventKey,
+                @JsonProperty("playoff_type") PlayoffType playoffType,
+                @JsonProperty("playoff_type_string") String playoffTypeDescription) {
+    this.key = key;
+    this.name = name;
+    this.code = code;
+    this.type = type;
+    this.district = district;
+    this.city = city;
+    this.stateProv = stateProv;
+    this.country = country;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.year = year;
+    this.shortName = shortName;
+    this.typeString = typeString;
+    this.week = week;
+    this.address = address;
+    this.postalCode = postalCode;
+    this.gmapsPlaceID = gmapsPlaceID;
+    this.gmapsURL = gmapsURL;
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.locationName = locationName;
+    this.timezone = timezone;
+    this.website = website;
+    this.firstID = firstID;
+    this.firstCode = firstCode;
+    this.webcasts = webcasts == null ? null : List.copyOf(webcasts);
+    this.divisionKeys = divisionKeys == null ? null : List.copyOf(divisionKeys);
+    this.parentEventKey = parentEventKey;
+    this.playoffType = playoffType;
+    this.playoffTypeDescription = playoffTypeDescription;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public String getCode() {
-    return code;
-  }
-
-  public Type getType() {
-    return type;
-  }
-
-  public District getDistrict() {
-    return district;
-  }
-
-  public String getCity() {
-    return city;
-  }
-
-  public String getStateProv() {
-    return stateProv;
-  }
-
-  public String getCountry() {
-    return country;
-  }
-
-  public Date getStartDate() {
-    return startDate;
-  }
-
-  public Date getEndDate() {
-    return endDate;
-  }
-
-  public int getYear() {
-    return year;
-  }
-
-  public String getShortName() {
-    return shortName;
-  }
-
-  public String getTypeString() {
-    return typeString;
-  }
-
-  public Integer getWeek() {
-    return week;
-  }
-
-  public String getAddress() {
-    return address;
-  }
-
-  public String getPostalCode() {
-    return postalCode;
-  }
-
-  public String getGmapsPlaceID() {
-    return gmapsPlaceID;
-  }
-
-  public String getGmapsURL() {
-    return gmapsURL;
-  }
-
-  public double getLatitude() {
-    return latitude;
-  }
-
-  public double getLongitude() {
-    return longitude;
-  }
-
-  public String getLocationName() {
-    return locationName;
-  }
-
-  public String getTimezone() {
-    return timezone;
-  }
-
-  public String getWebsite() {
-    return website;
-  }
-
-  public String getFirstID() {
-    return firstID;
-  }
-
-  public String getFirstCode() {
-    return firstCode;
-  }
-
-  public List<Webcast> getWebcasts() {
-    return Collections.unmodifiableList(webcasts);
-  }
-
-  public List<String> getDivisionKeys() {
-    return Collections.unmodifiableList(divisionKeys);
-  }
-
-  public String getParentEventKey() {
-    return parentEventKey;
-  }
-
-  public PlayoffType getPlayoffType() {
-    return playoffType;
-  }
-
-  @JsonGetter("playoff_type_string")
-  private String getPlayoffTypeString() {
-    return playoffType.value;
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Event [key=")
+           .append(key)
+           .append(", name=")
+           .append(name)
+           .append(", code=")
+           .append(code)
+           .append(", type=")
+           .append(type)
+           .append(", district=")
+           .append(district)
+           .append(", city=")
+           .append(city)
+           .append(", stateProv=")
+           .append(stateProv)
+           .append(", country=")
+           .append(country)
+           .append(", startDate=")
+           .append(startDate)
+           .append(", endDate=")
+           .append(endDate)
+           .append(", year=")
+           .append(year)
+           .append(", shortName=")
+           .append(shortName)
+           .append(", typeString=")
+           .append(typeString)
+           .append(", week=")
+           .append(week)
+           .append(", address=")
+           .append(address)
+           .append(", postalCode=")
+           .append(postalCode)
+           .append(", gmapsPlaceID=")
+           .append(gmapsPlaceID)
+           .append(", gmapsURL=")
+           .append(gmapsURL)
+           .append(", latitude=")
+           .append(latitude)
+           .append(", longitude=")
+           .append(longitude)
+           .append(", locationName=")
+           .append(locationName)
+           .append(", timezone=")
+           .append(timezone)
+           .append(", website=")
+           .append(website)
+           .append(", firstID=")
+           .append(firstID)
+           .append(", firstCode=")
+           .append(firstCode)
+           .append(", webcasts=")
+           .append(webcasts)
+           .append(", divisionKeys=")
+           .append(divisionKeys)
+           .append(", parentEventKey=")
+           .append(parentEventKey)
+           .append(", playoffType=")
+           .append(playoffType)
+           .append(", playoffTypeDescription=")
+           .append(playoffTypeDescription)
+           .append("]");
+    return builder.toString();
   }
 
   @Override
@@ -682,7 +608,7 @@ public final class Event {
                         endDate, year, shortName, typeString, week, address, postalCode,
                         gmapsPlaceID, gmapsURL, latitude, longitude, locationName, timezone,
                         website, firstID, firstCode, webcasts, divisionKeys, parentEventKey,
-                        playoffType);
+                        playoffType, playoffTypeDescription);
   }
 
   @Override
@@ -707,7 +633,8 @@ public final class Event {
         && Objects.equals(firstID, other.firstID) && Objects.equals(firstCode, other.firstCode)
         && Objects.equals(webcasts, other.webcasts)
         && Objects.equals(divisionKeys, other.divisionKeys)
-        && Objects.equals(parentEventKey, other.parentEventKey) && playoffType == other.playoffType;
+        && Objects.equals(parentEventKey, other.parentEventKey) && playoffType == other.playoffType
+        && Objects.equals(playoffTypeDescription, other.playoffTypeDescription);
   }
 
   public static Endpoint<Event> endpoint(String eventKey) {

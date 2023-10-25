@@ -1,10 +1,10 @@
 package org.victorrobotics.bluealliance;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -37,48 +37,44 @@ public final class Media {
     }
   }
 
-  @JsonProperty("type")
-  private Type type;
+  public final Type                type;
+  public final String              foreignKey;
+  public final Map<String, String> details;
+  public final boolean             highQuality;
+  public final String              directURL;
+  public final String              viewURL;
 
-  @JsonProperty("foreign_key")
-  private String foreignKey;
-
-  @JsonProperty("details")
-  private Map<String, String> details;
-
-  @JsonProperty("preferred")
-  private boolean highQuality;
-
-  @JsonProperty("direct_url")
-  private String directURL;
-
-  @JsonProperty("view_url")
-  private String viewURL;
-
-  public Media() {}
-
-  public Type getType() {
-    return type;
+  @JsonCreator
+  Media(@JsonProperty("type") Type type, @JsonProperty("foreign_key") String foreignKey,
+                @JsonProperty("details") Map<String, String> details,
+                @JsonProperty("preferred") boolean highQuality,
+                @JsonProperty("direct_url") String directURL,
+                @JsonProperty("view_url") String viewURL) {
+    this.type = type;
+    this.foreignKey = foreignKey;
+    this.details = details == null ? null : Map.copyOf(details);
+    this.highQuality = highQuality;
+    this.directURL = directURL;
+    this.viewURL = viewURL;
   }
 
-  public String getForeignKey() {
-    return foreignKey;
-  }
-
-  public Map<String, String> getDetails() {
-    return Collections.unmodifiableMap(details);
-  }
-
-  public boolean isHighQuality() {
-    return highQuality;
-  }
-
-  public String getDirectURL() {
-    return directURL;
-  }
-
-  public String getViewURL() {
-    return viewURL;
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Media [type=")
+           .append(type)
+           .append(", foreignKey=")
+           .append(foreignKey)
+           .append(", details=")
+           .append(details)
+           .append(", highQuality=")
+           .append(highQuality)
+           .append(", directURL=")
+           .append(directURL)
+           .append(", viewURL=")
+           .append(viewURL)
+           .append("]");
+    return builder.toString();
   }
 
   @Override

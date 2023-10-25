@@ -3,62 +3,56 @@ package org.victorrobotics.bluealliance;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class District {
   public static final class Ranking {
     public static final class EventPoints {
-      @JsonProperty("district_cmp")
-      private boolean isDistrictCampionship;
+      public final boolean isDistrictCampionship;
+      public final int     totalPoints;
+      public final int     alliancePoints;
+      public final int     eliminationPoints;
+      public final int     awardPoints;
+      public final String  eventKey;
+      public final int     qualificationPoints;
 
-      @JsonProperty("total")
-      private int totalPoints;
-
-      @JsonProperty("alliance_points")
-      private int alliancePoints;
-
-      @JsonProperty("elim_points")
-      private int eliminationPoints;
-
-      @JsonProperty("award_points")
-      private int awardPoints;
-
-      @JsonProperty("event_key")
-      private String eventKey;
-
-      @JsonProperty("qual_points")
-      private int qualificationPoints;
-
-      public EventPoints() {}
-
-      @JsonIgnore
-      public boolean isDistrictCampionship() {
-        return isDistrictCampionship;
+      @JsonCreator
+      EventPoints(@JsonProperty("district_cmp") boolean isDistrictCampionship,
+                          @JsonProperty("total") int totalPoints,
+                          @JsonProperty("alliance_points") int alliancePoints,
+                          @JsonProperty("elim_points") int eliminationPoints,
+                          @JsonProperty("award_points") int awardPoints,
+                          @JsonProperty("event_key") String eventKey,
+                          @JsonProperty("qual_points") int qualificationPoints) {
+        this.isDistrictCampionship = isDistrictCampionship;
+        this.totalPoints = totalPoints;
+        this.alliancePoints = alliancePoints;
+        this.eliminationPoints = eliminationPoints;
+        this.awardPoints = awardPoints;
+        this.eventKey = eventKey;
+        this.qualificationPoints = qualificationPoints;
       }
 
-      public int getTotalPoints() {
-        return totalPoints;
-      }
-
-      public int getAlliancePoints() {
-        return alliancePoints;
-      }
-
-      public int getEliminationPoints() {
-        return eliminationPoints;
-      }
-
-      public int getAwardPoints() {
-        return awardPoints;
-      }
-
-      public String getEventKey() {
-        return eventKey;
-      }
-
-      public int getQualificationPoints() {
-        return qualificationPoints;
+      @Override
+      public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("EventPoints [isDistrictCampionship=")
+               .append(isDistrictCampionship)
+               .append(", totalPoints=")
+               .append(totalPoints)
+               .append(", alliancePoints=")
+               .append(alliancePoints)
+               .append(", eliminationPoints=")
+               .append(eliminationPoints)
+               .append(", awardPoints=")
+               .append(awardPoints)
+               .append(", eventKey=")
+               .append(eventKey)
+               .append(", qualificationPoints=")
+               .append(qualificationPoints)
+               .append("]");
+        return builder.toString();
       }
 
       @Override
@@ -80,41 +74,39 @@ public final class District {
       }
     }
 
-    @JsonProperty("team_key")
-    private String teamKey;
+    public final String            teamKey;
+    public final int               rank;
+    public final int               rookieBonus;
+    public final int               pointTotal;
+    public final List<EventPoints> eventPoints;
 
-    @JsonProperty("rank")
-    private int rank;
-
-    @JsonProperty("rookie_bonus")
-    private int rookieBonus;
-
-    @JsonProperty("point_total")
-    private int pointTotal;
-
-    @JsonProperty("event_points")
-    private List<District.Ranking.EventPoints> eventPoints;
-
-    public Ranking() {}
-
-    public String getTeamKey() {
-      return teamKey;
+    @JsonCreator
+    Ranking(@JsonProperty("team_key") String teamKey, @JsonProperty("rank") int rank,
+                    @JsonProperty("rookie_bonus") int rookieBonus,
+                    @JsonProperty("point_total") int pointTotal,
+                    @JsonProperty("event_points") List<EventPoints> eventPoints) {
+      this.teamKey = teamKey;
+      this.rank = rank;
+      this.rookieBonus = rookieBonus;
+      this.pointTotal = pointTotal;
+      this.eventPoints = eventPoints == null ? null : List.copyOf(eventPoints);
     }
 
-    public int getRank() {
-      return rank;
-    }
-
-    public int getRookieBonus() {
-      return rookieBonus;
-    }
-
-    public int getPointTotal() {
-      return pointTotal;
-    }
-
-    public List<District.Ranking.EventPoints> getEventPoints() {
-      return eventPoints;
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("Ranking [teamKey=")
+             .append(teamKey)
+             .append(", rank=")
+             .append(rank)
+             .append(", rookieBonus=")
+             .append(rookieBonus)
+             .append(", pointTotal=")
+             .append(pointTotal)
+             .append(", eventPoints=")
+             .append(eventPoints)
+             .append("]");
+      return builder.toString();
     }
 
     @Override
@@ -137,34 +129,34 @@ public final class District {
     }
   }
 
-  @JsonProperty("abbrevitation")
-  private String abbrevitation;
+  public final String abbrevitation;
+  public final String displayName;
+  public final String key;
+  public final int    year;
 
-  @JsonProperty("display_name")
-  private String displayName;
-
-  @JsonProperty("key")
-  private String key;
-
-  @JsonProperty("year")
-  private int year;
-
-  public District() {}
-
-  public String getAbbrevitation() {
-    return abbrevitation;
+  @JsonCreator
+  District(@JsonProperty("abbrevitation") String abbrevitation,
+                   @JsonProperty("display_name") String displayName,
+                   @JsonProperty("key") String key, @JsonProperty("year") int year) {
+    this.abbrevitation = abbrevitation;
+    this.displayName = displayName;
+    this.key = key;
+    this.year = year;
   }
 
-  public String getDisplayName() {
-    return displayName;
-  }
-
-  public String getKey() {
-    return key;
-  }
-
-  public int getYear() {
-    return year;
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("District [abbrevitation=")
+           .append(abbrevitation)
+           .append(", displayName=")
+           .append(displayName)
+           .append(", key=")
+           .append(key)
+           .append(", year=")
+           .append(year)
+           .append("]");
+    return builder.toString();
   }
 
   @Override
