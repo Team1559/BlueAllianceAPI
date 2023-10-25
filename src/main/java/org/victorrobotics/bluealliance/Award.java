@@ -14,8 +14,7 @@ public final class Award {
     public final String awardee;
 
     @JsonCreator
-    Recipient(@JsonProperty("team_key") String teamKey,
-                      @JsonProperty("awardee") String awardee) {
+    Recipient(@JsonProperty("team_key") String teamKey, @JsonProperty("awardee") String awardee) {
       this.teamKey = teamKey;
       this.awardee = awardee;
     }
@@ -150,9 +149,9 @@ public final class Award {
 
   @JsonCreator
   Award(@JsonProperty("name") String name, @JsonProperty("award_type") Type type,
-                @JsonProperty("event_key") String eventKey,
-                @JsonProperty("recipient_list") List<Recipient> recipients,
-                @JsonProperty("year") int year) {
+        @JsonProperty("event_key") String eventKey,
+        @JsonProperty("recipient_list") List<Recipient> recipients,
+        @JsonProperty("year") int year) {
     this.name = name;
     this.type = type;
     this.eventKey = eventKey;

@@ -46,13 +46,12 @@ public final class Event {
 
     @JsonCreator
     Simple(@JsonProperty("key") String key, @JsonProperty("name") String name,
-                   @JsonProperty("event_code") String code, @JsonProperty("event_type") Type type,
-                   @JsonProperty("district") District district, @JsonProperty("city") String city,
-                   @JsonProperty("state_prov") String stateProv,
-                   @JsonProperty("country") String country,
-                   @JsonProperty("start_date") @JsonFormat(pattern = "yyyy-mm-dd") Date startDate,
-                   @JsonProperty("end_date") @JsonFormat(pattern = "yyyy-mm-dd") Date endDate,
-                   @JsonProperty("year") int year) {
+           @JsonProperty("event_code") String code, @JsonProperty("event_type") Type type,
+           @JsonProperty("district") District district, @JsonProperty("city") String city,
+           @JsonProperty("state_prov") String stateProv, @JsonProperty("country") String country,
+           @JsonProperty("start_date") @JsonFormat(pattern = "yyyy-mm-dd") Date startDate,
+           @JsonProperty("end_date") @JsonFormat(pattern = "yyyy-mm-dd") Date endDate,
+           @JsonProperty("year") int year) {
       this.key = key;
       this.name = name;
       this.code = code;
@@ -181,10 +180,9 @@ public final class Event {
 
       @JsonCreator
       Status(@JsonProperty("playoff_average") double playoffAverage,
-                     @JsonProperty("level") String level,
-                     @JsonProperty("record") WinLossRecord totalRecord,
-                     @JsonProperty("current_level_record") WinLossRecord currentRecord,
-                     @JsonProperty("status") String statusStr) {
+             @JsonProperty("level") String level, @JsonProperty("record") WinLossRecord totalRecord,
+             @JsonProperty("current_level_record") WinLossRecord currentRecord,
+             @JsonProperty("status") String statusStr) {
         this.playoffAverage = playoffAverage;
         this.level = level;
         this.totalRecord = totalRecord;
@@ -234,11 +232,10 @@ public final class Event {
     public final Status       status;
 
     @JsonCreator
-    PlayoffAlliance(@JsonProperty("name") String name,
-                            @JsonProperty("backup") Backup backup,
-                            @JsonProperty("declines") List<String> declinedTeams,
-                            @JsonProperty("picks") List<String> teams,
-                            @JsonProperty("status") Status status) {
+    PlayoffAlliance(@JsonProperty("name") String name, @JsonProperty("backup") Backup backup,
+                    @JsonProperty("declines") List<String> declinedTeams,
+                    @JsonProperty("picks") List<String> teams,
+                    @JsonProperty("status") Status status) {
       this.name = name;
       this.backup = backup;
       this.declinedTeams = declinedTeams == null ? null : List.copyOf(declinedTeams);
@@ -290,7 +287,7 @@ public final class Event {
 
     @JsonCreator
     WinLossRecord(@JsonProperty("losses") int losses, @JsonProperty("wins") int wins,
-                          @JsonProperty("ties") int ties) {
+                  @JsonProperty("ties") int ties) {
       this.losses = losses;
       this.wins = wins;
       this.ties = ties;
@@ -356,8 +353,8 @@ public final class Event {
 
     @JsonCreator
     Webcast(@JsonProperty("type") Type type, @JsonProperty("channel") String channel,
-                    @JsonProperty("date") @JsonFormat(pattern = "yyyy-mm-dd") Date date,
-                    @JsonProperty("file") String file) {
+            @JsonProperty("date") @JsonFormat(pattern = "yyyy-mm-dd") Date date,
+            @JsonProperty("file") String file) {
       this.type = type;
       this.channel = channel;
       this.date = date;
@@ -481,28 +478,25 @@ public final class Event {
 
   @JsonCreator
   Event(@JsonProperty("key") String key, @JsonProperty("name") String name,
-                @JsonProperty("event_code") String code, @JsonProperty("event_type") Type type,
-                @JsonProperty("district") District district, @JsonProperty("city") String city,
-                @JsonProperty("state_prov") String stateProv,
-                @JsonProperty("country") String country,
-                @JsonProperty("start_date") @JsonFormat(pattern = "yyyy-mm-dd") Date startDate,
-                @JsonProperty("end_date") @JsonFormat(pattern = "yyyy-mm-dd") Date endDate,
-                @JsonProperty("year") int year, @JsonProperty("short_name") String shortName,
-                @JsonProperty("event_type_string") String typeString,
-                @JsonProperty("week") Integer week, @JsonProperty("address") String address,
-                @JsonProperty("postal_code") String postalCode,
-                @JsonProperty("gmaps_place_id") String gmapsPlaceID,
-                @JsonProperty("gmaps_url") String gmapsURL, @JsonProperty("lat") double latitude,
-                @JsonProperty("lng") double longitude,
-                @JsonProperty("location_name") String locationName,
-                @JsonProperty("timezone") String timezone, @JsonProperty("website") String website,
-                @JsonProperty("first_event_id") String firstID,
-                @JsonProperty("first_event_code") String firstCode,
-                @JsonProperty("webcasts") List<Webcast> webcasts,
-                @JsonProperty("division_keys") List<String> divisionKeys,
-                @JsonProperty("parent_event_key") String parentEventKey,
-                @JsonProperty("playoff_type") PlayoffType playoffType,
-                @JsonProperty("playoff_type_string") String playoffTypeDescription) {
+        @JsonProperty("event_code") String code, @JsonProperty("event_type") Type type,
+        @JsonProperty("district") District district, @JsonProperty("city") String city,
+        @JsonProperty("state_prov") String stateProv, @JsonProperty("country") String country,
+        @JsonProperty("start_date") @JsonFormat(pattern = "yyyy-mm-dd") Date startDate,
+        @JsonProperty("end_date") @JsonFormat(pattern = "yyyy-mm-dd") Date endDate,
+        @JsonProperty("year") int year, @JsonProperty("short_name") String shortName,
+        @JsonProperty("event_type_string") String typeString, @JsonProperty("week") Integer week,
+        @JsonProperty("address") String address, @JsonProperty("postal_code") String postalCode,
+        @JsonProperty("gmaps_place_id") String gmapsPlaceID,
+        @JsonProperty("gmaps_url") String gmapsURL, @JsonProperty("lat") double latitude,
+        @JsonProperty("lng") double longitude, @JsonProperty("location_name") String locationName,
+        @JsonProperty("timezone") String timezone, @JsonProperty("website") String website,
+        @JsonProperty("first_event_id") String firstID,
+        @JsonProperty("first_event_code") String firstCode,
+        @JsonProperty("webcasts") List<Webcast> webcasts,
+        @JsonProperty("division_keys") List<String> divisionKeys,
+        @JsonProperty("parent_event_key") String parentEventKey,
+        @JsonProperty("playoff_type") PlayoffType playoffType,
+        @JsonProperty("playoff_type_string") String playoffTypeDescription) {
     this.key = key;
     this.name = name;
     this.code = code;

@@ -46,10 +46,9 @@ public final class Media {
 
   @JsonCreator
   Media(@JsonProperty("type") Type type, @JsonProperty("foreign_key") String foreignKey,
-                @JsonProperty("details") Map<String, String> details,
-                @JsonProperty("preferred") boolean highQuality,
-                @JsonProperty("direct_url") String directURL,
-                @JsonProperty("view_url") String viewURL) {
+        @JsonProperty("details") Map<String, String> details,
+        @JsonProperty("preferred") boolean highQuality,
+        @JsonProperty("direct_url") String directURL, @JsonProperty("view_url") String viewURL) {
     this.type = type;
     this.foreignKey = foreignKey;
     this.details = details == null ? null : Map.copyOf(details);
