@@ -10,8 +10,28 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class Event {
-  public static class Simple {
+public final class Event {
+  public static final class Keys {
+    private Keys() {}
+
+    public static Endpoint<List<String>> endpointForYear(int year) {
+      return Endpoint.forList("/events/" + year + "/keys", String.class);
+    }
+
+    public static Endpoint<List<String>> endpointForTeam(String teamKey) {
+      return Endpoint.forList("/team/" + teamKey + "/events/keys", String.class);
+    }
+
+    public static Endpoint<List<String>> endpointForTeam(String teamKey, int year) {
+      return Endpoint.forList("/team/" + teamKey + "/events/" + year + "/keys", String.class);
+    }
+
+    public static Endpoint<List<String>> endpointForDistrict(String districtKey) {
+      return Endpoint.forList("/district/" + districtKey + "/events/keys", String.class);
+    }
+  }
+
+  public static final class Simple {
     @JsonProperty("key")
     private String key;
 
@@ -111,60 +131,30 @@ public class Event {
           && Objects.equals(startDate, other.startDate) && Objects.equals(endDate, other.endDate)
           && year == other.year;
     }
-  }
 
-  public enum Type {
-    REGIONAL(0),
-    DISTRICT(1),
-    DISTRICT_CMP(2),
-    CMP_DIVISION(3),
-    CMP_FINALS(4),
-    DISTRICT_CMP_DIVISION(5),
-    FOC(6),
-    REMOTE(7),
+    public static Endpoint<Event.Simple> endpoint(String eventKey) {
+      return Endpoint.forSingle("/event/" + eventKey + "/simple", Event.Simple.class);
+    }
 
-    OFFSEASON(99),
-    PRESEASON(100),
-    UNLABLED(-1);
+    public static Endpoint<List<Event.Simple>> endpointForYear(int year) {
+      return Endpoint.forList("/events/" + year + "/simple", Event.Simple.class);
+    }
 
-    @JsonValue
-    private final int code;
+    public static Endpoint<List<Event.Simple>> endpointForTeam(String teamKey) {
+      return Endpoint.forList("/team/" + teamKey + "/events/simple", Event.Simple.class);
+    }
 
-    Type(int code) {
-      this.code = code;
+    public static Endpoint<List<Event.Simple>> endpointForTeam(String teamKey, int year) {
+      return Endpoint.forList("/team/" + teamKey + "/events/" + year + "/simple",
+                              Event.Simple.class);
+    }
+
+    public static Endpoint<List<Event.Simple>> endpointForDistrict(String districtKey) {
+      return Endpoint.forList("/district/" + districtKey + "/events/simple", Event.Simple.class);
     }
   }
 
-  public enum PlayoffType {
-    ELIM_8(0, "Elimination Bracket (8 Alliances)"),
-    ELIM_16(1, "Elimination Bracket (16 Alliances)"),
-    ELIM_4(2, "Elimination Bracket (4 Alliances)"),
-
-    AVG_SCORE_8(3, "Average Score (8 Alliances)"),
-    ROUND_ROBIN_6(4, "Round Robin (6 Alliances)"),
-    DOUBLE_ELIM_8(5, "Double Elimination Bracket (8 Alliances)"),
-
-    BEST_5_FINALS(6, "Best of 5 Finals"),
-    BEST_3_FINALS(7, "Best of 3 Finals"),
-
-    CUSTOM(8, "Custom"),
-
-    ELIM_2(9, "Elimination Bracket (2 Alliances)"),
-    DOUBLE_ELIM_8_NEW(10, "Double Elimination Bracket (8 Alliances)"),
-    DOUBLE_ELIM_4(11, "Double Elimination Bracket (4 Alliances)");
-
-    @JsonValue
-    public final int id;
-
-    public final String value;
-
-    PlayoffType(int id, String value) {
-      this.id = id;
-      this.value = value;
-    }
-  }
-
-  public static class Webcast {
+  public static final class Webcast {
     public enum Type {
       YOUTUBE("youtube"),
       TWITCH("twitch"),
@@ -230,6 +220,57 @@ public class Event {
       Webcast other = (Webcast) obj;
       return type == other.type && Objects.equals(channel, other.channel)
           && Objects.equals(date, other.date) && Objects.equals(file, other.file);
+    }
+  }
+
+  public enum Type {
+    REGIONAL(0),
+    DISTRICT(1),
+    DISTRICT_CMP(2),
+    CMP_DIVISION(3),
+    CMP_FINALS(4),
+    DISTRICT_CMP_DIVISION(5),
+    FOC(6),
+    REMOTE(7),
+
+    OFFSEASON(99),
+    PRESEASON(100),
+    UNLABLED(-1);
+
+    @JsonValue
+    private final int code;
+
+    Type(int code) {
+      this.code = code;
+    }
+  }
+
+  public enum PlayoffType {
+    ELIM_8(0, "Elimination Bracket (8 Alliances)"),
+    ELIM_16(1, "Elimination Bracket (16 Alliances)"),
+    ELIM_4(2, "Elimination Bracket (4 Alliances)"),
+
+    AVG_SCORE_8(3, "Average Score (8 Alliances)"),
+    ROUND_ROBIN_6(4, "Round Robin (6 Alliances)"),
+    DOUBLE_ELIM_8(5, "Double Elimination Bracket (8 Alliances)"),
+
+    BEST_5_FINALS(6, "Best of 5 Finals"),
+    BEST_3_FINALS(7, "Best of 3 Finals"),
+
+    CUSTOM(8, "Custom"),
+
+    ELIM_2(9, "Elimination Bracket (2 Alliances)"),
+    DOUBLE_ELIM_8_NEW(10, "Double Elimination Bracket (8 Alliances)"),
+    DOUBLE_ELIM_4(11, "Double Elimination Bracket (4 Alliances)");
+
+    @JsonValue
+    public final int id;
+
+    public final String value;
+
+    PlayoffType(int id, String value) {
+      this.id = id;
+      this.value = value;
     }
   }
 
