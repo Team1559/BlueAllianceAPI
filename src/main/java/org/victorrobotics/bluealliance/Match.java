@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -206,7 +207,10 @@ public final class Match {
   public static final class Video {
     public enum Type {
       YOUTUBE("youtube"),
-      BLUE_ALLIANCE("tba");
+      BLUE_ALLIANCE("tba"),
+
+      @JsonEnumDefaultValue
+      UNKNOWN("???");
 
       @JsonValue
       private final String id;
@@ -251,7 +255,10 @@ public final class Match {
     QUARTERFINAL("qf"),
     SEMIFINAL("sf"),
     FINAL("f"),
-    EF_UNKNOWN("ef");
+    EF_UNKNOWN("ef"),
+
+    @JsonEnumDefaultValue
+    UNKNOWN("???");
 
     @JsonValue
     private final String id;
@@ -263,7 +270,10 @@ public final class Match {
 
   public enum AllianceColor {
     RED("red"),
-    BLUE("blue");
+    BLUE("blue"),
+
+    @JsonEnumDefaultValue
+    UNKNOWN("???");
 
     @JsonValue
     private final String id;

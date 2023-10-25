@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -123,7 +124,10 @@ public final class Award {
     DESIGNERS(78),
     CONCEPT(79),
     GAME_DESIGN_CHALLENGE_WINNER(80),
-    GAME_DESIGN_CHALLENGE_FINALIST(81);
+    GAME_DESIGN_CHALLENGE_FINALIST(81),
+
+    @JsonEnumDefaultValue
+    CUSTOM(-1);
 
     @JsonValue
     private final int id;

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -167,7 +168,10 @@ public final class Event {
       MMS("mms"),
       JUSTIN("justin"),
       STEM_TV("stemtv"),
-      DACAST("dacast");
+      DACAST("dacast"),
+
+      @JsonEnumDefaultValue
+      UNKNOWN("???");
 
       @JsonValue
       private final String id;
@@ -235,6 +239,8 @@ public final class Event {
 
     OFFSEASON(99),
     PRESEASON(100),
+
+    @JsonEnumDefaultValue
     UNLABLED(-1);
 
     @JsonValue
@@ -257,6 +263,7 @@ public final class Event {
     BEST_5_FINALS(6, "Best of 5 Finals"),
     BEST_3_FINALS(7, "Best of 3 Finals"),
 
+    @JsonEnumDefaultValue
     CUSTOM(8, "Custom"),
 
     ELIM_2(9, "Elimination Bracket (2 Alliances)"),
