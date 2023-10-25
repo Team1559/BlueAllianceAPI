@@ -1,29 +1,34 @@
 package org.victorrobotics.bluealliance;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public final class Award {
   public static final class Recipient {
-    @JsonProperty("team_key")
-    private String teamKey;
+    public final String teamKey;
+    public final String awardee;
 
-    @JsonProperty("awardee")
-    private String awardee;
-
-    public Recipient() {}
-
-    public String getTeamKey() {
-      return teamKey;
+    @JsonCreator
+    Recipient(@JsonProperty("team_key") String teamKey,
+                      @JsonProperty("awardee") String awardee) {
+      this.teamKey = teamKey;
+      this.awardee = awardee;
     }
 
-    public String getAwardee() {
-      return awardee;
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("Recipient [teamKey=")
+             .append(teamKey)
+             .append(", awardee=")
+             .append(awardee)
+             .append("]");
+      return builder.toString();
     }
 
     @Override
@@ -137,41 +142,39 @@ public final class Award {
     }
   }
 
-  @JsonProperty("name")
-  private String name;
+  public final String          name;
+  public final Type            type;
+  public final String          eventKey;
+  public final List<Recipient> recipients;
+  public final int             year;
 
-  @JsonProperty("award_type")
-  private Type type;
-
-  @JsonProperty("event_key")
-  private String eventKey;
-
-  @JsonProperty("recipient_list")
-  private List<Recipient> recipients;
-
-  @JsonProperty("year")
-  private int year;
-
-  public Award() {}
-
-  public String getName() {
-    return name;
+  @JsonCreator
+  Award(@JsonProperty("name") String name, @JsonProperty("award_type") Type type,
+                @JsonProperty("event_key") String eventKey,
+                @JsonProperty("recipient_list") List<Recipient> recipients,
+                @JsonProperty("year") int year) {
+    this.name = name;
+    this.type = type;
+    this.eventKey = eventKey;
+    this.recipients = recipients == null ? null : List.copyOf(recipients);
+    this.year = year;
   }
 
-  public Type getType() {
-    return type;
-  }
-
-  public String getEventKey() {
-    return eventKey;
-  }
-
-  public List<Recipient> getRecipients() {
-    return Collections.unmodifiableList(recipients);
-  }
-
-  public int getYear() {
-    return year;
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Award [name=")
+           .append(name)
+           .append(", type=")
+           .append(type)
+           .append(", eventKey=")
+           .append(eventKey)
+           .append(", recipients=")
+           .append(recipients)
+           .append(", year=")
+           .append(year)
+           .append("]");
+    return builder.toString();
   }
 
   @Override

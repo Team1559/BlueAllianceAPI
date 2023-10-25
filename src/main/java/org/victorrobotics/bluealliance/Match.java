@@ -1,16 +1,15 @@
 package org.victorrobotics.bluealliance;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import org.victorrobotics.bluealliance.Match.Alliance.Color;
 
 public final class Match {
   public static final class Keys {
@@ -27,94 +26,68 @@ public final class Match {
   }
 
   public static final class Simple {
-    @JsonProperty("key")
-    private String key;
+    public final String   key;
+    public final Level    level;
+    public final int      setNumber;
+    public final int      matchNumber;
+    public final Alliance redAlliance;
+    public final Alliance blueAlliance;
+    public final Color    winner;
+    public final String   eventKey;
+    public final long     scheduledTime;
+    public final long     predictedTime;
+    public final long     actualTime;
 
-    @JsonProperty("comp_level")
-    private Match.CompetitionLevel level;
-
-    @JsonProperty("set_number")
-    private int setNumber;
-
-    @JsonProperty("match_number")
-    private int matchNumber;
-
-    // custom extraction
-    private Match.Alliance redAlliance;
-    private Match.Alliance blueAlliance;
-
-    @JsonProperty("winning_alliance")
-    private Match.AllianceColor winner;
-
-    @JsonProperty("event_key")
-    private String eventKey;
-
-    @JsonProperty("time")
-    private long scheduledTime;
-
-    @JsonProperty("predicted_time")
-    private long predictedTime;
-
-    @JsonProperty("actual_time")
-    private long actualTime;
-
-    public Simple() {}
-
-    @JsonGetter("alliances")
-    private Map<String, Match.Alliance> serializeAlliances() {
-      return Map.of("red", redAlliance, "blue", blueAlliance);
+    @JsonCreator
+    Simple(@JsonProperty("key") String key, @JsonProperty("comp_level") Level level,
+                   @JsonProperty("set_number") int setNumber,
+                   @JsonProperty("match_number") int matchNumber,
+                   @JsonProperty("alliances") Map<String, Alliance> alliances,
+                   @JsonProperty("winning_alliance") Color winner,
+                   @JsonProperty("event_key") String eventKey,
+                   @JsonProperty("time") long scheduledTime,
+                   @JsonProperty("predicted_time") long predictedTime,
+                   @JsonProperty("actual_time") long actualTime) {
+      this.key = key;
+      this.level = level;
+      this.setNumber = setNumber;
+      this.matchNumber = matchNumber;
+      this.redAlliance = alliances.get("red");
+      this.blueAlliance = alliances.get("blue");
+      this.winner = winner;
+      this.eventKey = eventKey;
+      this.scheduledTime = scheduledTime;
+      this.predictedTime = predictedTime;
+      this.actualTime = actualTime;
     }
 
-    @JsonSetter("alliances")
-    private void setAlliances(Map<String, Match.Alliance> alliances) {
-      redAlliance = alliances.get("red");
-      blueAlliance = alliances.get("blue");
-    }
-
-    public String getKey() {
-      return key;
-    }
-
-    public Match.CompetitionLevel getLevel() {
-      return level;
-    }
-
-    public int getSetNumber() {
-      return setNumber;
-    }
-
-    public int getMatchNumber() {
-      return matchNumber;
-    }
-
-    @JsonIgnore
-    public Match.Alliance getRedAlliance() {
-      return redAlliance;
-    }
-
-    @JsonIgnore
-    public Match.Alliance getBlueAlliance() {
-      return blueAlliance;
-    }
-
-    public Match.AllianceColor getWinner() {
-      return winner;
-    }
-
-    public String getEventKey() {
-      return eventKey;
-    }
-
-    public long getScheduledTime() {
-      return scheduledTime;
-    }
-
-    public long getPredictedTime() {
-      return predictedTime;
-    }
-
-    public long getActualTime() {
-      return actualTime;
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("Simple [key=")
+             .append(key)
+             .append(", level=")
+             .append(level)
+             .append(", setNumber=")
+             .append(setNumber)
+             .append(", matchNumber=")
+             .append(matchNumber)
+             .append(", redAlliance=")
+             .append(redAlliance)
+             .append(", blueAlliance=")
+             .append(blueAlliance)
+             .append(", winner=")
+             .append(winner)
+             .append(", eventKey=")
+             .append(eventKey)
+             .append(", scheduledTime=")
+             .append(scheduledTime)
+             .append(", predictedTime=")
+             .append(predictedTime)
+             .append(", actualTime=")
+             .append(actualTime)
+             .append("]");
+      return builder.toString();
     }
 
     @Override
@@ -155,35 +128,52 @@ public final class Match {
     }
   }
 
-  public static class Alliance {
-    @JsonProperty("score")
-    private int score;
+  public static final class Alliance {
+    public enum Color {
+      RED("red"),
+      BLUE("blue"),
 
-    @JsonProperty("team_keys")
-    private List<String> teamKeys;
+      @JsonEnumDefaultValue
+      UNKNOWN("???");
 
-    @JsonProperty("surrogate_team_keys")
-    private List<String> surrogateTeamKeys;
+      @JsonValue
+      private final String id;
 
-    @JsonProperty("dq_team_keys")
-    private List<String> disqualifiedTeamKeys;
-
-    public Alliance() {}
-
-    public int getScore() {
-      return score;
+      Color(String id) {
+        this.id = id;
+      }
     }
 
-    public List<String> getTeamKeys() {
-      return teamKeys;
+    public final int          score;
+    public final List<String> teamKeys;
+    public final List<String> surrogateTeamKeys;
+    public final List<String> disqualifiedTeamKeys;
+
+    @JsonCreator
+    Alliance(@JsonProperty("score") int score,
+                     @JsonProperty("team_keys") List<String> teamKeys,
+                     @JsonProperty("surrogate_team_keys") List<String> surrogateTeamKeys,
+                     @JsonProperty("dq_team_keys") List<String> disqualifiedTeamKeys) {
+      this.score = score;
+      this.teamKeys = teamKeys == null ? null : List.copyOf(teamKeys);
+      this.surrogateTeamKeys = surrogateTeamKeys == null ? null : List.copyOf(surrogateTeamKeys);
+      this.disqualifiedTeamKeys =
+          disqualifiedTeamKeys == null ? null : List.copyOf(disqualifiedTeamKeys);
     }
 
-    public List<String> getSurrogateTeamKeys() {
-      return surrogateTeamKeys;
-    }
-
-    public List<String> getDisqualifiedTeamKeys() {
-      return disqualifiedTeamKeys;
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("Alliance [score=")
+             .append(score)
+             .append(", teamKeys=")
+             .append(teamKeys)
+             .append(", surrogateTeamKeys=")
+             .append(surrogateTeamKeys)
+             .append(", disqualifiedTeamKeys=")
+             .append(disqualifiedTeamKeys)
+             .append("]");
+      return builder.toString();
     }
 
     @Override
@@ -218,20 +208,13 @@ public final class Match {
       }
     }
 
-    @JsonProperty("type")
-    private Match.Video.Type type;
+    public final Type   type;
+    public final String key;
 
-    @JsonProperty("key")
-    private String key;
-
-    public Video() {}
-
-    public Match.Video.Type getType() {
-      return type;
-    }
-
-    public String getKey() {
-      return key;
+    @JsonCreator
+    Video(@JsonProperty("type") Type type, @JsonProperty("key") String key) {
+      this.type = type;
+      this.key = key;
     }
 
     @Override
@@ -248,7 +231,7 @@ public final class Match {
     }
   }
 
-  public enum CompetitionLevel {
+  public enum Level {
     QUALIFICATION("qm"),
     QUARTERFINAL("qf"),
     SEMIFINAL("sf"),
@@ -261,130 +244,84 @@ public final class Match {
     @JsonValue
     private final String id;
 
-    CompetitionLevel(String id) {
+    Level(String id) {
       this.id = id;
     }
   }
 
-  public enum AllianceColor {
-    RED("red"),
-    BLUE("blue"),
-
-    @JsonEnumDefaultValue
-    UNKNOWN("???");
-
-    @JsonValue
-    private final String id;
-
-    AllianceColor(String id) {
-      this.id = id;
-    }
-  }
-
-  @JsonProperty("key")
-  private String key;
-
-  @JsonProperty("comp_level")
-  private Match.CompetitionLevel level;
-
-  @JsonProperty("set_number")
-  private int setNumber;
-
-  @JsonProperty("match_number")
-  private int matchNumber;
-
-  // custom extraction
-  private Match.Alliance redAlliance;
-  private Match.Alliance blueAlliance;
-
-  @JsonProperty("winning_alliance")
-  private Match.AllianceColor winningAlliance;
-
-  @JsonProperty("event_key")
-  private String eventKey;
-
-  @JsonProperty("time")
-  private long scheduledTime;
-
-  @JsonProperty("actual_time")
-  private long actualTime;
-
-  @JsonProperty("predicted_time")
-  private long predictedTime;
-
-  @JsonProperty("post_result_time")
-  private long resultPostTime;
-
+  public final String      key;
+  public final Level       level;
+  public final int         setNumber;
+  public final int         matchNumber;
+  public final Alliance    redAlliance;
+  public final Alliance    blueAlliance;
+  public final Color       winningAlliance;
+  public final String      eventKey;
+  public final long        scheduledTime;
+  public final long        actualTime;
+  public final long        predictedTime;
+  public final long        resultPostTime;
+  public final List<Video> videos;
   // TODO: score breakdowns
 
-  @JsonProperty("videos")
-  private List<Video> videos;
-
-  public Match() {}
-
-  @JsonGetter("alliances")
-  private Map<String, Match.Alliance> serializeAlliances() {
-    return Map.of("red", redAlliance, "blue", blueAlliance);
+  @JsonCreator
+  Match(@JsonProperty("key") String key, @JsonProperty("comp_level") Level level,
+                @JsonProperty("set_number") int setNumber,
+                @JsonProperty("match_number") int matchNumber,
+                @JsonProperty("alliances") Map<String, Alliance> alliances,
+                @JsonProperty("winning_alliance") Color winningAlliance,
+                @JsonProperty("event_key") String eventKey,
+                @JsonProperty("time") long scheduledTime,
+                @JsonProperty("actual_time") long actualTime,
+                @JsonProperty("predicted_time") long predictedTime,
+                @JsonProperty("post_result_time") long resultPostTime,
+                @JsonProperty("videos") List<Video> videos) {
+    this.key = key;
+    this.level = level;
+    this.setNumber = setNumber;
+    this.matchNumber = matchNumber;
+    this.redAlliance = alliances.get("red");
+    this.blueAlliance = alliances.get("blue");
+    this.winningAlliance = winningAlliance;
+    this.eventKey = eventKey;
+    this.scheduledTime = scheduledTime;
+    this.actualTime = actualTime;
+    this.predictedTime = predictedTime;
+    this.resultPostTime = resultPostTime;
+    this.videos = videos == null ? null : List.copyOf(videos);
   }
 
-  @JsonSetter("alliances")
-  private void setAlliances(Map<String, Match.Alliance> alliances) {
-    redAlliance = alliances.get("red");
-    blueAlliance = alliances.get("blue");
-  }
-
-  public String getKey() {
-    return key;
-  }
-
-  public Match.CompetitionLevel getLevel() {
-    return level;
-  }
-
-  public int getSetNumber() {
-    return setNumber;
-  }
-
-  public int getMatchNumber() {
-    return matchNumber;
-  }
-
-  @JsonIgnore
-  public Match.Alliance getRedAlliance() {
-    return redAlliance;
-  }
-
-  @JsonIgnore
-  public Match.Alliance getBlueAlliance() {
-    return blueAlliance;
-  }
-
-  public Match.AllianceColor getWinningAlliance() {
-    return winningAlliance;
-  }
-
-  public String getEventKey() {
-    return eventKey;
-  }
-
-  public long getScheduledTime() {
-    return scheduledTime;
-  }
-
-  public long getActualTime() {
-    return actualTime;
-  }
-
-  public long getPredictedTime() {
-    return predictedTime;
-  }
-
-  public long getResultPostTime() {
-    return resultPostTime;
-  }
-
-  public List<Video> getVideos() {
-    return Collections.unmodifiableList(videos);
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Match [key=")
+           .append(key)
+           .append(", level=")
+           .append(level)
+           .append(", setNumber=")
+           .append(setNumber)
+           .append(", matchNumber=")
+           .append(matchNumber)
+           .append(", redAlliance=")
+           .append(redAlliance)
+           .append(", blueAlliance=")
+           .append(blueAlliance)
+           .append(", winningAlliance=")
+           .append(winningAlliance)
+           .append(", eventKey=")
+           .append(eventKey)
+           .append(", scheduledTime=")
+           .append(scheduledTime)
+           .append(", actualTime=")
+           .append(actualTime)
+           .append(", predictedTime=")
+           .append(predictedTime)
+           .append(", resultPostTime=")
+           .append(resultPostTime)
+           .append(", videos=")
+           .append(videos)
+           .append("]");
+    return builder.toString();
   }
 
   @Override

@@ -3,6 +3,7 @@ package org.victorrobotics.bluealliance;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class Team {
@@ -35,55 +36,47 @@ public final class Team {
   }
 
   public static final class Simple {
-    @JsonProperty("key")
-    private String key;
+    public final String key;
+    public final int    number;
+    public final String name;
+    public final String fullName;
+    public final String city;
+    public final String province;
+    public final String country;
 
-    @JsonProperty("team_number")
-    private int number;
-
-    @JsonProperty("nickname")
-    private String name;
-
-    @JsonProperty("name")
-    private String fullName;
-
-    @JsonProperty("city")
-    private String city;
-
-    @JsonProperty("state_prov")
-    private String province;
-
-    @JsonProperty("country")
-    private String country;
-
-    public Simple() {}
-
-    public String getKey() {
-      return key;
+    @JsonCreator
+    Simple(@JsonProperty("key") String key, @JsonProperty("team_number") int number,
+           @JsonProperty("nickname") String name, @JsonProperty("name") String fullName,
+           @JsonProperty("city") String city, @JsonProperty("state_prov") String province,
+           @JsonProperty("country") String country) {
+      this.key = key;
+      this.number = number;
+      this.name = name;
+      this.fullName = fullName;
+      this.city = city;
+      this.province = province;
+      this.country = country;
     }
 
-    public int getNumber() {
-      return number;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public String getFullName() {
-      return fullName;
-    }
-
-    public String getCity() {
-      return city;
-    }
-
-    public String getProvince() {
-      return province;
-    }
-
-    public String getCountry() {
-      return country;
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("Simple [key=")
+             .append(key)
+             .append(", number=")
+             .append(number)
+             .append(", name=")
+             .append(name)
+             .append(", fullName=")
+             .append(fullName)
+             .append(", city=")
+             .append(city)
+             .append(", province=")
+             .append(province)
+             .append(", country=")
+             .append(country)
+             .append("]");
+      return builder.toString();
     }
 
     @Override
@@ -124,34 +117,33 @@ public final class Team {
   }
 
   public static final class Robot {
-    @JsonProperty("year")
-    private int year;
+    public final int    year;
+    public final String name;
+    public final String key;
+    public final String teamKey;
 
-    @JsonProperty("robot_name")
-    private String name;
-
-    @JsonProperty("key")
-    private String key;
-
-    @JsonProperty("team_key")
-    private String teamKey;
-
-    public Robot() {}
-
-    public int getYear() {
-      return year;
+    @JsonCreator
+    Robot(@JsonProperty("year") int year, @JsonProperty("robot_name") String name,
+          @JsonProperty("key") String key, @JsonProperty("team_key") String teamKey) {
+      this.year = year;
+      this.name = name;
+      this.key = key;
+      this.teamKey = teamKey;
     }
 
-    public String getName() {
-      return name;
-    }
-
-    public String getKey() {
-      return key;
-    }
-
-    public String getTeamKey() {
-      return teamKey;
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("Robot [year=")
+             .append(year)
+             .append(", name=")
+             .append(name)
+             .append(", key=")
+             .append(key)
+             .append(", teamKey=")
+             .append(teamKey)
+             .append("]");
+      return builder.toString();
     }
 
     @Override
@@ -173,83 +165,65 @@ public final class Team {
     }
   }
 
-  @JsonProperty("key")
-  private String key;
+  public final String key;
+  public final int    number;
+  public final String name;
+  public final String fullName;
+  public final String school;
+  public final String city;
+  public final String province;
+  public final String country;
+  public final String postalCode;
+  public final String website;
+  public final int    rookieYear;
 
-  @JsonProperty("team_number")
-  private int number;
-
-  @JsonProperty("nickname")
-  private String name;
-
-  @JsonProperty("name")
-  private String fullName;
-
-  @JsonProperty("school_name")
-  private String school;
-
-  @JsonProperty("city")
-  private String city;
-
-  @JsonProperty("state_prov")
-  private String province;
-
-  @JsonProperty("country")
-  private String country;
-
-  @JsonProperty("postal_code")
-  private String postalCode;
-
-  @JsonProperty("website")
-  private String website;
-
-  @JsonProperty("rookie_year")
-  private int rookieYear;
-
-  public Team() {}
-
-  public String getKey() {
-    return key;
+  @JsonCreator
+  Team(@JsonProperty("key") String key, @JsonProperty("team_number") int number,
+       @JsonProperty("nickname") String name, @JsonProperty("name") String fullName,
+       @JsonProperty("school_name") String school, @JsonProperty("city") String city,
+       @JsonProperty("state_prov") String province, @JsonProperty("country") String country,
+       @JsonProperty("postal_code") String postalCode, @JsonProperty("website") String website,
+       @JsonProperty("rookie_year") int rookieYear) {
+    this.key = key;
+    this.number = number;
+    this.name = name;
+    this.fullName = fullName;
+    this.school = school;
+    this.city = city;
+    this.province = province;
+    this.country = country;
+    this.postalCode = postalCode;
+    this.website = website;
+    this.rookieYear = rookieYear;
   }
 
-  public int getNumber() {
-    return number;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getFullName() {
-    return fullName;
-  }
-
-  public String getSchool() {
-    return school;
-  }
-
-  public String getCity() {
-    return city;
-  }
-
-  public String getProvince() {
-    return province;
-  }
-
-  public String getCountry() {
-    return country;
-  }
-
-  public String getPostalCode() {
-    return postalCode;
-  }
-
-  public String getWebsite() {
-    return website;
-  }
-
-  public int getRookieYear() {
-    return rookieYear;
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Team [key=")
+           .append(key)
+           .append(", number=")
+           .append(number)
+           .append(", name=")
+           .append(name)
+           .append(", fullName=")
+           .append(fullName)
+           .append(", school=")
+           .append(school)
+           .append(", city=")
+           .append(city)
+           .append(", province=")
+           .append(province)
+           .append(", country=")
+           .append(country)
+           .append(", postalCode=")
+           .append(postalCode)
+           .append(", website=")
+           .append(website)
+           .append(", rookieYear=")
+           .append(rookieYear)
+           .append("]");
+    return builder.toString();
   }
 
   @Override
