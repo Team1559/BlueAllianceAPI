@@ -527,4 +527,16 @@ public final class Event {
   public static Endpoint<List<Event>> endpointForYear(int year) {
     return Endpoint.forList("/events/" + year, Event.class);
   }
+
+  public static Endpoint<List<Event>> endpointForTeam(String teamKey) {
+    return Endpoint.forList("/team/" + teamKey + "/events/simple", Event.class);
+  }
+
+  public static Endpoint<List<Event>> endpointForTeam(String teamKey, int year) {
+    return Endpoint.forList("/team/" + teamKey + "/events/" + year + "/simple", Event.class);
+  }
+
+  public static Endpoint<List<Event>> endpointForDistrict(String districtKey) {
+    return Endpoint.forList("/district/" + districtKey + "/events/simple", Event.class);
+  }
 }
