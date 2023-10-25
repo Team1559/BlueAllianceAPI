@@ -9,8 +9,6 @@ import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +63,7 @@ public final class Endpoint<T> implements Supplier<T> {
     requestBuilder = HttpRequest.newBuilder()
                                 .uri(URI.create(TBA_API_URL + endpoint))
                                 .GET()
-                                .setHeader("X-TBA-Auth-Key", TBA_API_KEY)
-                                .timeout(Duration.of(10, ChronoUnit.SECONDS));
+                                .setHeader("X-TBA-Auth-Key", TBA_API_KEY);
     minRefreshTime = System.currentTimeMillis();
   }
 
