@@ -40,14 +40,12 @@ public final class Match {
 
     @JsonCreator
     Simple(@JsonProperty("key") String key, @JsonProperty("comp_level") Level level,
-                   @JsonProperty("set_number") int setNumber,
-                   @JsonProperty("match_number") int matchNumber,
-                   @JsonProperty("alliances") Map<String, Alliance> alliances,
-                   @JsonProperty("winning_alliance") Color winner,
-                   @JsonProperty("event_key") String eventKey,
-                   @JsonProperty("time") long scheduledTime,
-                   @JsonProperty("predicted_time") long predictedTime,
-                   @JsonProperty("actual_time") long actualTime) {
+           @JsonProperty("set_number") int setNumber, @JsonProperty("match_number") int matchNumber,
+           @JsonProperty("alliances") Map<String, Alliance> alliances,
+           @JsonProperty("winning_alliance") Color winner,
+           @JsonProperty("event_key") String eventKey, @JsonProperty("time") long scheduledTime,
+           @JsonProperty("predicted_time") long predictedTime,
+           @JsonProperty("actual_time") long actualTime) {
       this.key = key;
       this.level = level;
       this.setNumber = setNumber;
@@ -150,10 +148,9 @@ public final class Match {
     public final List<String> disqualifiedTeamKeys;
 
     @JsonCreator
-    Alliance(@JsonProperty("score") int score,
-                     @JsonProperty("team_keys") List<String> teamKeys,
-                     @JsonProperty("surrogate_team_keys") List<String> surrogateTeamKeys,
-                     @JsonProperty("dq_team_keys") List<String> disqualifiedTeamKeys) {
+    Alliance(@JsonProperty("score") int score, @JsonProperty("team_keys") List<String> teamKeys,
+             @JsonProperty("surrogate_team_keys") List<String> surrogateTeamKeys,
+             @JsonProperty("dq_team_keys") List<String> disqualifiedTeamKeys) {
       this.score = score;
       this.teamKeys = teamKeys == null ? null : List.copyOf(teamKeys);
       this.surrogateTeamKeys = surrogateTeamKeys == null ? null : List.copyOf(surrogateTeamKeys);
@@ -218,6 +215,17 @@ public final class Match {
     }
 
     @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("Video [type=")
+             .append(type)
+             .append(", key=")
+             .append(key)
+             .append("]");
+      return builder.toString();
+    }
+
+    @Override
     public int hashCode() {
       return Objects.hash(type, key);
     }
@@ -266,16 +274,14 @@ public final class Match {
 
   @JsonCreator
   Match(@JsonProperty("key") String key, @JsonProperty("comp_level") Level level,
-                @JsonProperty("set_number") int setNumber,
-                @JsonProperty("match_number") int matchNumber,
-                @JsonProperty("alliances") Map<String, Alliance> alliances,
-                @JsonProperty("winning_alliance") Color winningAlliance,
-                @JsonProperty("event_key") String eventKey,
-                @JsonProperty("time") long scheduledTime,
-                @JsonProperty("actual_time") long actualTime,
-                @JsonProperty("predicted_time") long predictedTime,
-                @JsonProperty("post_result_time") long resultPostTime,
-                @JsonProperty("videos") List<Video> videos) {
+        @JsonProperty("set_number") int setNumber, @JsonProperty("match_number") int matchNumber,
+        @JsonProperty("alliances") Map<String, Alliance> alliances,
+        @JsonProperty("winning_alliance") Color winningAlliance,
+        @JsonProperty("event_key") String eventKey, @JsonProperty("time") long scheduledTime,
+        @JsonProperty("actual_time") long actualTime,
+        @JsonProperty("predicted_time") long predictedTime,
+        @JsonProperty("post_result_time") long resultPostTime,
+        @JsonProperty("videos") List<Video> videos) {
     this.key = key;
     this.level = level;
     this.setNumber = setNumber;

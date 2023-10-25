@@ -13,7 +13,7 @@ public final class APIStatus {
 
     @JsonCreator
     AppVersion(@JsonProperty("min_app_version") int minimum,
-                       @JsonProperty("latest_app_version") int latest) {
+               @JsonProperty("latest_app_version") int latest) {
       this.minimum = minimum;
       this.latest = latest;
     }
@@ -52,11 +52,11 @@ public final class APIStatus {
 
   @JsonCreator
   APIStatus(@JsonProperty("current_season") int currentSeason,
-                    @JsonProperty("max_season") int maxSeason,
-                    @JsonProperty("is_datafeed_down") boolean isDatafeedDown,
-                    @JsonProperty("down_events") List<String> downEvents,
-                    @JsonProperty("ios") AppVersion iosVersion,
-                    @JsonProperty("android") AppVersion androidVersion) {
+            @JsonProperty("max_season") int maxSeason,
+            @JsonProperty("is_datafeed_down") boolean isDatafeedDown,
+            @JsonProperty("down_events") List<String> downEvents,
+            @JsonProperty("ios") AppVersion iosVersion,
+            @JsonProperty("android") AppVersion androidVersion) {
     this.currentSeason = currentSeason;
     this.maxSeason = maxSeason;
     this.isDatafeedDown = isDatafeedDown;

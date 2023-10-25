@@ -19,12 +19,12 @@ public final class District {
 
       @JsonCreator
       EventPoints(@JsonProperty("district_cmp") boolean isDistrictCampionship,
-                          @JsonProperty("total") int totalPoints,
-                          @JsonProperty("alliance_points") int alliancePoints,
-                          @JsonProperty("elim_points") int eliminationPoints,
-                          @JsonProperty("award_points") int awardPoints,
-                          @JsonProperty("event_key") String eventKey,
-                          @JsonProperty("qual_points") int qualificationPoints) {
+                  @JsonProperty("total") int totalPoints,
+                  @JsonProperty("alliance_points") int alliancePoints,
+                  @JsonProperty("elim_points") int eliminationPoints,
+                  @JsonProperty("award_points") int awardPoints,
+                  @JsonProperty("event_key") String eventKey,
+                  @JsonProperty("qual_points") int qualificationPoints) {
         this.isDistrictCampionship = isDistrictCampionship;
         this.totalPoints = totalPoints;
         this.alliancePoints = alliancePoints;
@@ -82,9 +82,9 @@ public final class District {
 
     @JsonCreator
     Ranking(@JsonProperty("team_key") String teamKey, @JsonProperty("rank") int rank,
-                    @JsonProperty("rookie_bonus") int rookieBonus,
-                    @JsonProperty("point_total") int pointTotal,
-                    @JsonProperty("event_points") List<EventPoints> eventPoints) {
+            @JsonProperty("rookie_bonus") int rookieBonus,
+            @JsonProperty("point_total") int pointTotal,
+            @JsonProperty("event_points") List<EventPoints> eventPoints) {
       this.teamKey = teamKey;
       this.rank = rank;
       this.rookieBonus = rookieBonus;
@@ -136,8 +136,8 @@ public final class District {
 
   @JsonCreator
   District(@JsonProperty("abbrevitation") String abbrevitation,
-                   @JsonProperty("display_name") String displayName,
-                   @JsonProperty("key") String key, @JsonProperty("year") int year) {
+           @JsonProperty("display_name") String displayName, @JsonProperty("key") String key,
+           @JsonProperty("year") int year) {
     this.abbrevitation = abbrevitation;
     this.displayName = displayName;
     this.key = key;
