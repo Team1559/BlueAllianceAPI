@@ -1,5 +1,6 @@
 package org.victorrobotics.bluealliance;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -8,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.victorrobotics.bluealliance.Match.Alliance.Color;
 
@@ -34,9 +37,9 @@ public final class Match {
     public final Alliance blueAlliance;
     public final Color    winner;
     public final String   eventKey;
-    public final long     scheduledTime;
-    public final long     predictedTime;
-    public final long     actualTime;
+    public final Date     scheduledTime;
+    public final Date     predictedTime;
+    public final Date     actualTime;
 
     @JsonCreator
     Simple(@JsonProperty("key") String key, @JsonProperty("comp_level") Level level,
@@ -54,9 +57,9 @@ public final class Match {
       this.blueAlliance = alliances.get("blue");
       this.winner = winner;
       this.eventKey = eventKey;
-      this.scheduledTime = scheduledTime;
-      this.predictedTime = predictedTime;
-      this.actualTime = actualTime;
+      this.scheduledTime = new Date(scheduledTime * 1000);
+      this.predictedTime = new Date(predictedTime * 1000);
+      this.actualTime = new Date(actualTime * 1000);
     }
 
     @Override
@@ -102,8 +105,10 @@ public final class Match {
       return Objects.equals(key, other.key) && level == other.level && setNumber == other.setNumber
           && matchNumber == other.matchNumber && Objects.equals(redAlliance, other.redAlliance)
           && Objects.equals(blueAlliance, other.blueAlliance) && winner == other.winner
-          && Objects.equals(eventKey, other.eventKey) && scheduledTime == other.scheduledTime
-          && predictedTime == other.predictedTime && actualTime == other.actualTime;
+          && Objects.equals(eventKey, other.eventKey)
+          && Objects.equals(scheduledTime, other.scheduledTime)
+          && Objects.equals(predictedTime, other.predictedTime)
+          && Objects.equals(actualTime, other.actualTime);
     }
 
     public static Endpoint<Match.Simple> endpoint(String matchKey) {
@@ -239,6 +244,26 @@ public final class Match {
     }
   }
 
+  public interface ScoreBreakdown {
+    static ScoreBreakdown of(String matchKey, JsonNode json) {
+      int year;
+      try {
+        year = Integer.parseInt(matchKey.substring(0, 4));
+      } catch (NumberFormatException | IndexOutOfBoundsException e) {
+        return null;
+      }
+
+      try {
+        switch (year) {
+          case 2023:
+            return Endpoint.JSON_OBJECT_MAPPER.treeToValue(json,
+                                                           ScoreBreakdowns.ChargedUp2023.class);
+        }
+      } catch (JsonProcessingException e) {}
+      return null;
+    }
+  }
+
   public enum Level {
     QUALIFICATION("qm"),
     QUARTERFINAL("qf"),
@@ -257,20 +282,21 @@ public final class Match {
     }
   }
 
-  public final String      key;
-  public final Level       level;
-  public final int         setNumber;
-  public final int         matchNumber;
-  public final Alliance    redAlliance;
-  public final Alliance    blueAlliance;
-  public final Color       winningAlliance;
-  public final String      eventKey;
-  public final long        scheduledTime;
-  public final long        actualTime;
-  public final long        predictedTime;
-  public final long        resultPostTime;
-  public final List<Video> videos;
-  // TODO: score breakdowns
+  public final String         key;
+  public final Level          level;
+  public final int            setNumber;
+  public final int            matchNumber;
+  public final Alliance       redAlliance;
+  public final Alliance       blueAlliance;
+  public final Color          winningAlliance;
+  public final String         eventKey;
+  public final Date           scheduledTime;
+  public final Date           actualTime;
+  public final Date           predictedTime;
+  public final Date           resultPostTime;
+  public final List<Video>    videos;
+  public final ScoreBreakdown redScore;
+  public final ScoreBreakdown blueScore;
 
   @JsonCreator
   Match(@JsonProperty("key") String key, @JsonProperty("comp_level") Level level,
@@ -281,6 +307,7 @@ public final class Match {
         @JsonProperty("actual_time") long actualTime,
         @JsonProperty("predicted_time") long predictedTime,
         @JsonProperty("post_result_time") long resultPostTime,
+        @JsonProperty("score_breakdown") Map<String, JsonNode> scoreBreakdown,
         @JsonProperty("videos") List<Video> videos) {
     this.key = key;
     this.level = level;
@@ -290,11 +317,20 @@ public final class Match {
     this.blueAlliance = alliances.get("blue");
     this.winningAlliance = winningAlliance;
     this.eventKey = eventKey;
-    this.scheduledTime = scheduledTime;
-    this.actualTime = actualTime;
-    this.predictedTime = predictedTime;
-    this.resultPostTime = resultPostTime;
+    this.scheduledTime = new Date(scheduledTime * 1000);
+    this.actualTime = new Date(actualTime * 1000);
+    this.predictedTime = new Date(predictedTime * 1000);
+    this.resultPostTime = new Date(resultPostTime * 1000);
     this.videos = videos == null ? null : List.copyOf(videos);
+
+    if (scoreBreakdown != null && scoreBreakdown.containsKey("red")
+        && scoreBreakdown.containsKey("blue")) {
+      redScore = ScoreBreakdown.of(key, scoreBreakdown.get("red"));
+      blueScore = ScoreBreakdown.of(key, scoreBreakdown.get("blue"));
+    } else {
+      redScore = null;
+      blueScore = null;
+    }
   }
 
   @Override
@@ -326,6 +362,10 @@ public final class Match {
            .append(resultPostTime)
            .append(", videos=")
            .append(videos)
+           .append(", redScore=")
+           .append(redScore)
+           .append(", blueScore=")
+           .append(blueScore)
            .append("]");
     return builder.toString();
   }
@@ -334,7 +374,7 @@ public final class Match {
   public int hashCode() {
     return Objects.hash(key, level, setNumber, matchNumber, redAlliance, blueAlliance,
                         winningAlliance, eventKey, scheduledTime, actualTime, predictedTime,
-                        resultPostTime, videos);
+                        resultPostTime, videos, redScore, blueScore);
   }
 
   @Override
@@ -346,9 +386,12 @@ public final class Match {
         && matchNumber == other.matchNumber && Objects.equals(redAlliance, other.redAlliance)
         && Objects.equals(blueAlliance, other.blueAlliance)
         && winningAlliance == other.winningAlliance && Objects.equals(eventKey, other.eventKey)
-        && scheduledTime == other.scheduledTime && actualTime == other.actualTime
-        && predictedTime == other.predictedTime && resultPostTime == other.resultPostTime
-        && Objects.equals(videos, other.videos);
+        && Objects.equals(scheduledTime, other.scheduledTime)
+        && Objects.equals(actualTime, other.actualTime)
+        && Objects.equals(predictedTime, other.predictedTime)
+        && Objects.equals(resultPostTime, other.resultPostTime)
+        && Objects.equals(videos, other.videos) && Objects.equals(redScore, other.redScore)
+        && Objects.equals(blueScore, other.blueScore);
   }
 
   public static Endpoint<Match> endpoint(String matchKey) {
