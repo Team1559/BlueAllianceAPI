@@ -47,10 +47,11 @@ public final class Endpoint<T> implements Supplier<T> {
   private static final String TBA_API_URL = "https://www.thebluealliance.com/api/v3";
   private static final String TBA_API_KEY = System.getenv("TBA_API_KEY");
 
-  private static final HttpClient   HTTP_CLIENT        = HttpClient.newHttpClient();
-  private static final ObjectMapper JSON_OBJECT_MAPPER =
+  private static final HttpClient HTTP_CLIENT        = HttpClient.newHttpClient();
+  static final ObjectMapper       JSON_OBJECT_MAPPER =
       new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                        .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
+                        .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
+                        .disable(DeserializationFeature.WRAP_EXCEPTIONS);
 
   private final HttpRequest.Builder requestBuilder;
   private final ObjectReader        jsonReader;
