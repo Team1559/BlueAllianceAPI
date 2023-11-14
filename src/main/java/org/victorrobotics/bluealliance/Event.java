@@ -1,8 +1,12 @@
 package org.victorrobotics.bluealliance;
 
 import java.util.Date;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.IntStream;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
@@ -391,6 +395,338 @@ public final class Event {
     }
   }
 
+  public static final class DistrictPoints {
+    public static final class Data {
+      public final int totalPoints;
+      public final int alliancePoints;
+      public final int eliminationPoints;
+      public final int awardPoints;
+      public final int qualificationPoints;
+
+      @JsonCreator
+      Data(@JsonProperty("total") int totalPoints,
+           @JsonProperty("alliance_points") int alliancePoints,
+           @JsonProperty("elim_points") int eliminationPoints,
+           @JsonProperty("award_points") int awardPoints,
+           @JsonProperty("qual_points") int qualificationPoints) {
+        this.totalPoints = totalPoints;
+        this.alliancePoints = alliancePoints;
+        this.eliminationPoints = eliminationPoints;
+        this.awardPoints = awardPoints;
+        this.qualificationPoints = qualificationPoints;
+      }
+
+      @Override
+      public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Points [totalPoints=")
+               .append(totalPoints)
+               .append(", alliancePoints=")
+               .append(alliancePoints)
+               .append(", eliminationPoints=")
+               .append(eliminationPoints)
+               .append(", awardPoints=")
+               .append(awardPoints)
+               .append(", qualificationPoints=")
+               .append(qualificationPoints)
+               .append("]");
+        return builder.toString();
+      }
+
+      @Override
+      public int hashCode() {
+        return Objects.hash(totalPoints, alliancePoints, eliminationPoints, awardPoints,
+                            qualificationPoints);
+      }
+
+      @Override
+      public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Data)) return false;
+        Data other = (Data) obj;
+        return totalPoints == other.totalPoints && alliancePoints == other.alliancePoints
+            && eliminationPoints == other.eliminationPoints && awardPoints == other.awardPoints
+            && qualificationPoints == other.qualificationPoints;
+      }
+    }
+
+    public static final class TieBreaker {
+      public final List<Integer> highestQualScores;
+      public final int           qualificationWins;
+
+      @JsonCreator
+      TieBreaker(@JsonProperty("highest_qual_scores") List<Integer> highestQualScores,
+                 @JsonProperty("qual_wins") int qualificationWins) {
+        this.highestQualScores = highestQualScores == null ? null : List.copyOf(highestQualScores);
+        this.qualificationWins = qualificationWins;
+      }
+
+      @Override
+      public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("TieBreaker [highestQualScores=")
+               .append(highestQualScores)
+               .append(", qualificationWins=")
+               .append(qualificationWins)
+               .append("]");
+        return builder.toString();
+      }
+
+      @Override
+      public int hashCode() {
+        return Objects.hash(highestQualScores, qualificationWins);
+      }
+
+      @Override
+      public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof TieBreaker)) return false;
+        TieBreaker other = (TieBreaker) obj;
+        return Objects.equals(highestQualScores, other.highestQualScores)
+            && qualificationWins == other.qualificationWins;
+      }
+    }
+
+    public final Map<Integer, Data>       points;
+    public final Map<Integer, TieBreaker> tiebreakers;
+
+    @JsonCreator
+    DistrictPoints(@JsonProperty("points") Map<Integer, Data> points,
+                   @JsonProperty("tiebreakers") Map<Integer, TieBreaker> tiebreakers) {
+      this.points = points == null ? null : Map.copyOf(points);
+      this.tiebreakers = tiebreakers == null ? null : Map.copyOf(tiebreakers);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("DistrictPoints [points=")
+             .append(points)
+             .append(", tiebreakers=")
+             .append(tiebreakers)
+             .append("]");
+      return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(points, tiebreakers);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (!(obj instanceof DistrictPoints)) return false;
+      DistrictPoints other = (DistrictPoints) obj;
+      return Objects.equals(points, other.points) && Objects.equals(tiebreakers, other.tiebreakers);
+    }
+
+    public static Endpoint<DistrictPoints> endpoint(String eventKey) {
+      return Endpoint.forSingle("/event/" + eventKey + "/district_points", DistrictPoints.class);
+    }
+  }
+
+  public static final class Rankings {
+    public static final class Team {
+      public final int           matchesPlayed;
+      public final Integer       averageMatchScore;
+      public final List<Integer> extraStats;
+      public final List<Integer> sortOrders;
+      public final WinLossRecord winLossRecord;
+      public final int           rank;
+      public final int           disqualificationCount;
+      public final String        teamKey;
+
+      @JsonCreator
+      Team(@JsonProperty("matches_played") int matchesPlayed,
+           @JsonProperty("qual_average") Integer averageMatchScore,
+           @JsonProperty("extra_stats") List<Integer> extraStats,
+           @JsonProperty("sort_orders") List<Integer> sortOrders,
+           @JsonProperty("record") WinLossRecord winLossRecord, @JsonProperty("rank") int rank,
+           @JsonProperty("dq") int disqualificationCount,
+           @JsonProperty("team_key") String teamKey) {
+        this.matchesPlayed = matchesPlayed;
+        this.averageMatchScore = averageMatchScore;
+        this.extraStats = extraStats == null ? null : List.copyOf(extraStats);
+        this.sortOrders = sortOrders == null ? null : List.copyOf(sortOrders);
+        this.winLossRecord = winLossRecord;
+        this.rank = rank;
+        this.disqualificationCount = disqualificationCount;
+        this.teamKey = teamKey;
+      }
+
+      @Override
+      public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Team [matchesPlayed=")
+               .append(matchesPlayed)
+               .append(", averageMatchScore=")
+               .append(averageMatchScore)
+               .append(", extraStats=")
+               .append(extraStats)
+               .append(", sortOrders=")
+               .append(sortOrders)
+               .append(", winLossRecord=")
+               .append(winLossRecord)
+               .append(", rank=")
+               .append(rank)
+               .append(", disqualificationCount=")
+               .append(disqualificationCount)
+               .append(", teamKey=")
+               .append(teamKey)
+               .append("]");
+        return builder.toString();
+      }
+
+      @Override
+      public int hashCode() {
+        return Objects.hash(matchesPlayed, averageMatchScore, extraStats, sortOrders, winLossRecord,
+                            rank, disqualificationCount, teamKey);
+      }
+
+      @Override
+      public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Team)) return false;
+        Team other = (Team) obj;
+        return matchesPlayed == other.matchesPlayed
+            && Objects.equals(averageMatchScore, other.averageMatchScore)
+            && Objects.equals(extraStats, other.extraStats)
+            && Objects.equals(sortOrders, other.sortOrders)
+            && Objects.equals(winLossRecord, other.winLossRecord) && rank == other.rank
+            && disqualificationCount == other.disqualificationCount
+            && Objects.equals(teamKey, other.teamKey);
+      }
+    }
+
+    public static final class DataInfo {
+      public final int    precision;
+      public final String name;
+
+      @JsonCreator
+      DataInfo(@JsonProperty("precision") int precision, @JsonProperty("name") String name) {
+        this.precision = precision;
+        this.name = name;
+      }
+
+      @Override
+      public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("DataInfo [precision=")
+               .append(precision)
+               .append(", name=")
+               .append(name)
+               .append("]");
+        return builder.toString();
+      }
+
+      @Override
+      public int hashCode() {
+        return Objects.hash(precision, name);
+      }
+
+      @Override
+      public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof DataInfo)) return false;
+        DataInfo other = (DataInfo) obj;
+        return precision == other.precision && Objects.equals(name, other.name);
+      }
+    }
+
+    public final List<Event.Rankings.Team> rankings;
+    public final List<DataInfo>            extraStats;
+    public final List<DataInfo>            sortOrder;
+
+    @JsonCreator
+    Rankings(@JsonProperty("rankings") List<Event.Rankings.Team> rankings,
+             @JsonProperty("extra_stats_info") List<DataInfo> extraStats,
+             @JsonProperty("sort_order_info") List<DataInfo> sortOrder) {
+      this.rankings = rankings == null ? null : List.copyOf(rankings);
+      this.extraStats = extraStats == null ? null : List.copyOf(extraStats);
+      this.sortOrder = extraStats == null ? null : List.copyOf(sortOrder);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("Rankings [rankings=")
+             .append(rankings)
+             .append(", extraStats=")
+             .append(extraStats)
+             .append(", sortOrder=")
+             .append(sortOrder)
+             .append("]");
+      return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(rankings, extraStats, sortOrder);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (!(obj instanceof Rankings)) return false;
+      Rankings other = (Rankings) obj;
+      return Objects.equals(rankings, other.rankings)
+          && Objects.equals(extraStats, other.extraStats)
+          && Objects.equals(sortOrder, other.sortOrder);
+    }
+
+    public static Endpoint<List<Event.Rankings>> endpointForEvent(String eventKey) {
+      return Endpoint.forList("/event/" + eventKey + "/rankings", Event.Rankings.class);
+    }
+  }
+
+  public static final class OPRs {
+    public final Map<String, Double> offensivePowerRatings;
+    public final Map<String, Double> defensivePowerRatings;
+    public final Map<String, Double> contributionsToWinMargin;
+
+    @JsonCreator
+    OPRs(@JsonProperty("oprs") Map<String, Double> oprs,
+         @JsonProperty("dprs") Map<String, Double> dprs,
+         @JsonProperty("ccwms") Map<String, Double> ccwms) {
+      this.offensivePowerRatings = oprs == null ? null : Map.copyOf(oprs);
+      this.defensivePowerRatings = dprs == null ? null : Map.copyOf(dprs);
+      this.contributionsToWinMargin = ccwms == null ? null : Map.copyOf(ccwms);
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("OPRs [offensivePowerRatings=")
+             .append(offensivePowerRatings)
+             .append(", defensivePowerRatings=")
+             .append(defensivePowerRatings)
+             .append(", contributionsToWinMargin=")
+             .append(contributionsToWinMargin)
+             .append("]");
+      return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(offensivePowerRatings, defensivePowerRatings, contributionsToWinMargin);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (!(obj instanceof OPRs)) return false;
+      OPRs other = (OPRs) obj;
+      return Objects.equals(offensivePowerRatings, other.offensivePowerRatings)
+          && Objects.equals(defensivePowerRatings, other.defensivePowerRatings)
+          && Objects.equals(contributionsToWinMargin, other.contributionsToWinMargin);
+    }
+
+    public static Endpoint<Event.OPRs> endpointForEvent(String eventKey) {
+      return Endpoint.forSingle("/event/" + eventKey + "/oprs", Event.OPRs.class);
+    }
+  }
+
   public enum Type {
     REGIONAL(0),
     DISTRICT(1),
@@ -649,5 +985,15 @@ public final class Event {
 
   public static Endpoint<List<Event>> endpointForDistrict(String districtKey) {
     return Endpoint.forList("/district/" + districtKey + "/events/simple", Event.class);
+  }
+
+  public static void main(String[] args) {
+    System.out.println(IntStream.range(0, 20)
+                                .mapToObj(Team::endpointForPage)
+                                .map(Endpoint::request)
+                                .map(CompletableFuture::join)
+                                .flatMap(Collection::stream)
+                                .map(team -> team.name)
+                                .reduce("", (n1, n2) -> n1.length() > n2.length() ? n1 : n2));
   }
 }

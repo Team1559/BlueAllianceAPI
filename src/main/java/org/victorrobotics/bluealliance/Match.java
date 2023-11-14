@@ -26,6 +26,10 @@ public final class Match {
       return Endpoint.forList("/team/" + teamKey + "/event/" + eventKey + "/matches/keys",
                               String.class);
     }
+
+    public static Endpoint<List<String>> endpointForTimeseries(String eventKey) {
+      return Endpoint.forList("/event/" + eventKey + "/matches/timeseries", String.class);
+    }
   }
 
   public static final class Simple {
@@ -124,8 +128,7 @@ public final class Match {
                               Match.Simple.class);
     }
 
-    public static Endpoint<List<Match.Simple>> endpointForTeamAtEvent(String teamKey,
-                                                                      String eventKey) {
+    public static Endpoint<List<Match.Simple>> endpointForTeam(String teamKey, String eventKey) {
       return Endpoint.forList("/team/" + teamKey + "/event/" + eventKey + "/matches/simple",
                               Match.Simple.class);
     }
@@ -245,22 +248,20 @@ public final class Match {
   }
 
   public interface ScoreBreakdown {
+    @SuppressWarnings("java:S1301") // replace switch with if
     static ScoreBreakdown of(String matchKey, JsonNode json) {
-      int year;
       try {
-        year = Integer.parseInt(matchKey.substring(0, 4));
-      } catch (NumberFormatException | IndexOutOfBoundsException e) {
-        return null;
-      }
-
-      try {
+        int year = Integer.parseInt(matchKey.substring(0, 4));
         switch (year) {
           case 2023:
             return Endpoint.JSON_OBJECT_MAPPER.treeToValue(json,
                                                            ScoreBreakdowns.ChargedUp2023.class);
+          default:
+            return null;
         }
-      } catch (JsonProcessingException e) {}
-      return null;
+      } catch (NumberFormatException | IndexOutOfBoundsException | JsonProcessingException e) {
+        return null;
+      }
     }
   }
 
@@ -406,7 +407,7 @@ public final class Match {
     return Endpoint.forList("/team/" + teamKey + "/matches/" + year, Match.class);
   }
 
-  public static Endpoint<List<Match>> endpointForTeamAtEvent(String teamKey, String eventKey) {
+  public static Endpoint<List<Match>> endpointForTeam(String teamKey, String eventKey) {
     return Endpoint.forList("/team/" + teamKey + "/event/" + eventKey + "/matches", Match.class);
   }
 }

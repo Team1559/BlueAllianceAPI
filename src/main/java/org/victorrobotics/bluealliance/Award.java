@@ -203,7 +203,7 @@ public final class Award {
     return Endpoint.forList("/team/" + teamKey + "/awards/" + year, Award.class);
   }
 
-  public static Endpoint<List<Award>> endpointForTeamAtEvent(String teamKey, String eventKey) {
+  public static Endpoint<List<Award>> endpointForTeam(String teamKey, String eventKey) {
     return Endpoint.forList("/team/" + teamKey + "/event/" + eventKey + "/awards", Award.class);
   }
 }

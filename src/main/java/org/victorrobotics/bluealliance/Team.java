@@ -1,10 +1,14 @@
 package org.victorrobotics.bluealliance;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.victorrobotics.bluealliance.Event.PlayoffAlliance.Status;
+import org.victorrobotics.bluealliance.Event.Rankings.DataInfo;
 
 public final class Team {
   public static final class Keys {
@@ -162,6 +166,222 @@ public final class Team {
 
     public static Endpoint<List<Robot>> endpointForTeam(String teamKey) {
       return Endpoint.forList("/team/" + teamKey + "/robots", Robot.class);
+    }
+  }
+
+  public static final class EventStatus {
+    public static final class Rank {
+      public final int                           teamCount;
+      public final Event.Rankings.Team           ranking;
+      public final List<Event.Rankings.DataInfo> sortOrderInfo;
+      public final String                        status;
+
+      @JsonCreator
+      Rank(@JsonProperty("num_teams") int teamCount,
+           @JsonProperty("ranking") Event.Rankings.Team ranking,
+           @JsonProperty("sort_order_info") List<DataInfo> sortOrderInfo,
+           @JsonProperty("status") String status) {
+        this.teamCount = teamCount;
+        this.ranking = ranking;
+        this.sortOrderInfo = sortOrderInfo;
+        this.status = status;
+      }
+
+      @Override
+      public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Rank [teamCount=")
+               .append(teamCount)
+               .append(", ranking=")
+               .append(ranking)
+               .append(", sortOrderInfo=")
+               .append(sortOrderInfo)
+               .append(", status=")
+               .append(status)
+               .append("]");
+        return builder.toString();
+      }
+
+      @Override
+      public int hashCode() {
+        return Objects.hash(teamCount, ranking, sortOrderInfo, status);
+      }
+
+      @Override
+      public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Rank)) return false;
+        Rank other = (Rank) obj;
+        return teamCount == other.teamCount && Objects.equals(ranking, other.ranking)
+            && Objects.equals(sortOrderInfo, other.sortOrderInfo)
+            && Objects.equals(status, other.status);
+      }
+    }
+
+    public static final class Alliance {
+      public static final class Backup {
+        public final String out;
+        public final String in;
+
+        @JsonCreator
+        Backup(@JsonProperty("out") String out, @JsonProperty("in") String in) {
+          this.out = out;
+          this.in = in;
+        }
+
+        @Override
+        public String toString() {
+          StringBuilder builder = new StringBuilder();
+          builder.append("Backup [out=")
+                 .append(out)
+                 .append(", in=")
+                 .append(in)
+                 .append("]");
+          return builder.toString();
+        }
+
+        @Override
+        public int hashCode() {
+          return Objects.hash(out, in);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+          if (this == obj) return true;
+          if (!(obj instanceof Backup)) return false;
+          Backup other = (Backup) obj;
+          return Objects.equals(out, other.out) && Objects.equals(in, other.in);
+        }
+      }
+
+      public final String name;
+      public final int    num;
+      public final Backup backup;
+      public final int    pick;
+
+      @JsonCreator
+      Alliance(@JsonProperty("name") String name, @JsonProperty("number") int num,
+               @JsonProperty("backup") Backup backup, @JsonProperty("pick") int pick) {
+        this.name = name;
+        this.num = num;
+        this.backup = backup;
+        this.pick = pick;
+      }
+
+      @Override
+      public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Alliance [name=")
+               .append(name)
+               .append(", num=")
+               .append(num)
+               .append(", backup=")
+               .append(backup)
+               .append(", pick=")
+               .append(pick)
+               .append("]");
+        return builder.toString();
+      }
+
+      @Override
+      public int hashCode() {
+        return Objects.hash(name, num, backup, pick);
+      }
+
+      @Override
+      public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Alliance)) return false;
+        Alliance other = (Alliance) obj;
+        return Objects.equals(name, other.name) && num == other.num
+            && Objects.equals(backup, other.backup) && pick == other.pick;
+      }
+    }
+
+    public final Event.PlayoffAlliance.Status playoff;
+
+    public final Rank     qualificationRank;
+    public final Alliance alliance;
+    public final String   allianceStatusHTML;
+    public final String   playoffStatusHTML;
+    public final String   overallStatusHTML;
+    public final String   nextMatchKey;
+    public final String   lastMatchKey;
+
+    @JsonCreator
+    EventStatus(@JsonProperty("qual") Rank qualificationRank,
+                @JsonProperty("alliance") Alliance alliance,
+                @JsonProperty("playoff") Status playoff,
+                @JsonProperty("alliance_status_str") String allianceStatusHTML,
+                @JsonProperty("playoff_status_str") String playoffStatusHTML,
+                @JsonProperty("overall_status_str") String overallStatusHTML,
+                @JsonProperty("next_match_key") String nextMatchKey,
+                @JsonProperty("last_match_key") String lastMatchKey) {
+      this.qualificationRank = qualificationRank;
+      this.alliance = alliance;
+      this.playoff = playoff;
+      this.allianceStatusHTML = allianceStatusHTML;
+      this.playoffStatusHTML = playoffStatusHTML;
+      this.overallStatusHTML = overallStatusHTML;
+      this.nextMatchKey = nextMatchKey;
+      this.lastMatchKey = lastMatchKey;
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append("EventStatus [qualificationRank=")
+             .append(qualificationRank)
+             .append(", alliance=")
+             .append(alliance)
+             .append(", playoff=")
+             .append(playoff)
+             .append(", allianceStatusHTML=")
+             .append(allianceStatusHTML)
+             .append(", playoffStatusHTML=")
+             .append(playoffStatusHTML)
+             .append(", overallStatusHTML=")
+             .append(overallStatusHTML)
+             .append(", nextMatchKey=")
+             .append(nextMatchKey)
+             .append(", lastMatchKey=")
+             .append(lastMatchKey)
+             .append("]");
+      return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(qualificationRank, alliance, playoff, allianceStatusHTML,
+                          playoffStatusHTML, overallStatusHTML, nextMatchKey, lastMatchKey);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (!(obj instanceof EventStatus)) return false;
+      EventStatus other = (EventStatus) obj;
+      return Objects.equals(qualificationRank, other.qualificationRank)
+          && Objects.equals(alliance, other.alliance) && Objects.equals(playoff, other.playoff)
+          && Objects.equals(allianceStatusHTML, other.allianceStatusHTML)
+          && Objects.equals(playoffStatusHTML, other.playoffStatusHTML)
+          && Objects.equals(overallStatusHTML, other.overallStatusHTML)
+          && Objects.equals(nextMatchKey, other.nextMatchKey)
+          && Objects.equals(lastMatchKey, other.lastMatchKey);
+    }
+
+    public static Endpoint<Map<String, EventStatus>> endpointForEvent(String eventKey) {
+      return Endpoint.forMap("/event/" + eventKey + "/teams/statuses", EventStatus.class);
+    }
+
+    public static Endpoint<Map<String, EventStatus>> endpointForTeam(String teamKey, int year) {
+      return Endpoint.forMap("/team/" + teamKey + "/events/" + year + "/statuses",
+                             EventStatus.class);
+    }
+
+    public static Endpoint<EventStatus> endpointForTeam(String teamKey, String eventKey) {
+      return Endpoint.forSingle("/team/" + teamKey + "/event/" + eventKey + "/status",
+                                EventStatus.class);
     }
   }
 

@@ -141,4 +141,15 @@ public final class Endpoint<T> implements Supplier<T> {
     }
     return (Endpoint<List<T>>) value.get();
   }
+
+  @SuppressWarnings("unchecked")
+  static <T> Endpoint<Map<String, T>> forMap(String endpoint, Class<T> clazz) {
+    WeakReference<Endpoint<?>> value = ENDPOINTS.get(endpoint);
+    if (value == null || value.get() == null) {
+      value =
+          new WeakReference<>(new Endpoint<>(endpoint, JSON_OBJECT_MAPPER.readerForMapOf(clazz)));
+      ENDPOINTS.put(endpoint, value);
+    }
+    return (Endpoint<Map<String, T>>) value.get();
+  }
 }
