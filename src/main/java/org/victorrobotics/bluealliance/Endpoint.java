@@ -56,8 +56,7 @@ public final class Endpoint<T> implements Supplier<T> {
   private final HttpRequest.Builder requestBuilder;
   private final ObjectReader        jsonReader;
 
-  private T    value;
-  private long minRefreshTime;
+  private T value;
 
   private Endpoint(String endpoint, ObjectReader reader) {
     this.jsonReader = reader;
@@ -65,7 +64,6 @@ public final class Endpoint<T> implements Supplier<T> {
                                 .uri(URI.create(TBA_API_URL + endpoint))
                                 .GET()
                                 .setHeader("X-TBA-Auth-Key", TBA_API_KEY);
-    minRefreshTime = System.currentTimeMillis();
   }
 
   public T get() {
@@ -73,10 +71,6 @@ public final class Endpoint<T> implements Supplier<T> {
   }
 
   public CompletableFuture<T> request() {
-    if (System.currentTimeMillis() < minRefreshTime) {
-      return CompletableFuture.completedFuture(value);
-    }
-
     return HTTP_CLIENT.sendAsync(requestBuilder.build(), BodyHandlers.ofInputStream())
                       .thenApply(this::handleResponse);
   }
@@ -88,8 +82,6 @@ public final class Endpoint<T> implements Supplier<T> {
     HttpHeaders headers = response.headers();
     headers.firstValue("etag")
            .ifPresent(eTag -> requestBuilder.setHeader("If-None-Match", eTag));
-    headers.firstValue("cache-control")
-           .ifPresent(this::updateRefreshTime);
 
     if (statusCode != 200) return value;
 
@@ -103,22 +95,6 @@ public final class Endpoint<T> implements Supplier<T> {
     }
 
     return value;
-  }
-
-  private void updateRefreshTime(String str) {
-    int beginIndex = str.indexOf("max-age=");
-    if (beginIndex == -1) return;
-    beginIndex += 8;
-
-    int endIndex = beginIndex;
-    int len = str.length();
-    char c;
-    while (endIndex < len && (c = str.charAt(endIndex)) >= '0' && c <= '9') {
-      endIndex++;
-    }
-
-    int maxAge = Integer.parseInt(str.substring(beginIndex, endIndex));
-    minRefreshTime = System.currentTimeMillis() + maxAge * 1000;
   }
 
   @SuppressWarnings("unchecked")
