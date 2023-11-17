@@ -50,9 +50,9 @@ public final class Match {
            @JsonProperty("set_number") int setNumber, @JsonProperty("match_number") int matchNumber,
            @JsonProperty("alliances") Map<String, Alliance> alliances,
            @JsonProperty("winning_alliance") Color winner,
-           @JsonProperty("event_key") String eventKey, @JsonProperty("time") long scheduledTime,
-           @JsonProperty("predicted_time") long predictedTime,
-           @JsonProperty("actual_time") long actualTime) {
+           @JsonProperty("event_key") String eventKey, @JsonProperty("time") Long scheduledTime,
+           @JsonProperty("predicted_time") Long predictedTime,
+           @JsonProperty("actual_time") Long actualTime) {
       this.key = key;
       this.level = level;
       this.setNumber = setNumber;
@@ -61,9 +61,9 @@ public final class Match {
       this.blueAlliance = alliances.get("blue");
       this.winner = winner;
       this.eventKey = eventKey;
-      this.scheduledTime = new Date(scheduledTime * 1000);
-      this.predictedTime = new Date(predictedTime * 1000);
-      this.actualTime = new Date(actualTime * 1000);
+      this.scheduledTime = scheduledTime == null ? null : new Date(scheduledTime * 1000);
+      this.predictedTime = predictedTime == null ? null : new Date(predictedTime * 1000);
+      this.actualTime = actualTime == null ? null : new Date(actualTime * 1000);
     }
 
     @Override
@@ -304,10 +304,10 @@ public final class Match {
         @JsonProperty("set_number") int setNumber, @JsonProperty("match_number") int matchNumber,
         @JsonProperty("alliances") Map<String, Alliance> alliances,
         @JsonProperty("winning_alliance") Color winningAlliance,
-        @JsonProperty("event_key") String eventKey, @JsonProperty("time") long scheduledTime,
-        @JsonProperty("actual_time") long actualTime,
-        @JsonProperty("predicted_time") long predictedTime,
-        @JsonProperty("post_result_time") long resultPostTime,
+        @JsonProperty("event_key") String eventKey, @JsonProperty("time") Long scheduledTime,
+        @JsonProperty("actual_time") Long actualTime,
+        @JsonProperty("predicted_time") Long predictedTime,
+        @JsonProperty("post_result_time") Long resultPostTime,
         @JsonProperty("score_breakdown") Map<String, JsonNode> scoreBreakdown,
         @JsonProperty("videos") List<Video> videos) {
     this.key = key;
@@ -318,10 +318,10 @@ public final class Match {
     this.blueAlliance = alliances.get("blue");
     this.winningAlliance = winningAlliance;
     this.eventKey = eventKey;
-    this.scheduledTime = new Date(scheduledTime * 1000);
-    this.actualTime = new Date(actualTime * 1000);
-    this.predictedTime = new Date(predictedTime * 1000);
-    this.resultPostTime = new Date(resultPostTime * 1000);
+    this.scheduledTime = scheduledTime == null ? null : new Date(scheduledTime * 1000);
+    this.actualTime = actualTime == null ? null : new Date(actualTime * 1000);
+    this.predictedTime = predictedTime == null ? null : new Date(predictedTime * 1000);
+    this.resultPostTime = resultPostTime == null ? null : new Date(resultPostTime * 1000);
     this.videos = videos == null ? null : List.copyOf(videos);
 
     if (scoreBreakdown != null && scoreBreakdown.containsKey("red")
