@@ -4,7 +4,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -23,13 +22,12 @@ class TestAward {
     List<Award.Recipient> recipients = List.of(recipient, recipient2);
 
     Award award = new Award("award name", Award.Type.WINNER, "event key",
-                            List.of(recipient, recipient2), 2023);
+                            recipients, 2023);
     assertEquals("event key", award.eventKey);
     assertSame(Award.Type.WINNER, award.type);
     assertEquals("event key", award.eventKey);
     assertEquals(2023, award.year);
 
-    assertNotSame(recipients, award.recipients);
     assertNotNull(award.recipients);
     assertEquals(recipients.size(), award.recipients.size());
     assertSame(recipients.get(0), award.recipients.get(0));
