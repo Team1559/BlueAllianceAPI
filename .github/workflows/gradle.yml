@@ -22,3 +22,5 @@ jobs:
 
     - name: Execute Gradle build
       run: ./gradlew build --no-daemon
+      env:
+        TBA_API_KEY: ${{ secrets.TBA_API_KEY }}
