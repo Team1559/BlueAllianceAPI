@@ -6,7 +6,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public final class APIStatus {
+public final class ApiStatus {
   public static final class AppVersion {
     public final int minimum;
     public final int latest;
@@ -51,7 +51,7 @@ public final class APIStatus {
   public final AppVersion   androidVersion;
 
   @JsonCreator
-  APIStatus(@JsonProperty("current_season") int currentSeason,
+  ApiStatus(@JsonProperty("current_season") int currentSeason,
             @JsonProperty("max_season") int maxSeason,
             @JsonProperty("is_datafeed_down") boolean isDatafeedDown,
             @JsonProperty("down_events") List<String> downEvents,
@@ -93,15 +93,15 @@ public final class APIStatus {
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;
-    if (!(obj instanceof APIStatus)) return false;
-    APIStatus other = (APIStatus) obj;
+    if (!(obj instanceof ApiStatus)) return false;
+    ApiStatus other = (ApiStatus) obj;
     return currentSeason == other.currentSeason && maxSeason == other.maxSeason
         && isDatafeedDown == other.isDatafeedDown && Objects.equals(downEvents, other.downEvents)
         && Objects.equals(iosVersion, other.iosVersion)
         && Objects.equals(androidVersion, other.androidVersion);
   }
 
-  public static Endpoint<APIStatus> endpoint() {
-    return Endpoint.forSingle("/status", APIStatus.class);
+  public static Endpoint<ApiStatus> endpoint() {
+    return Endpoint.forSingle("/status", ApiStatus.class);
   }
 }
