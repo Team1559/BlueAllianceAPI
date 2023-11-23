@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public final class District {
   public static final class Ranking {
     public static final class EventPoints {
-      public final boolean isDistrictCampionship;
+      public final boolean isDistrictChampionship;
       public final int     totalPoints;
       public final int     alliancePoints;
       public final int     eliminationPoints;
@@ -18,14 +18,14 @@ public final class District {
       public final int     qualificationPoints;
 
       @JsonCreator
-      EventPoints(@JsonProperty("district_cmp") boolean isDistrictCampionship,
+      EventPoints(@JsonProperty("district_cmp") boolean isDistrictChampionship,
                   @JsonProperty("total") int totalPoints,
                   @JsonProperty("alliance_points") int alliancePoints,
                   @JsonProperty("elim_points") int eliminationPoints,
                   @JsonProperty("award_points") int awardPoints,
                   @JsonProperty("event_key") String eventKey,
                   @JsonProperty("qual_points") int qualificationPoints) {
-        this.isDistrictCampionship = isDistrictCampionship;
+        this.isDistrictChampionship = isDistrictChampionship;
         this.totalPoints = totalPoints;
         this.alliancePoints = alliancePoints;
         this.eliminationPoints = eliminationPoints;
@@ -37,8 +37,8 @@ public final class District {
       @Override
       public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("EventPoints [isDistrictCampionship=")
-               .append(isDistrictCampionship)
+        builder.append("EventPoints [isDistrictChampionship=")
+               .append(isDistrictChampionship)
                .append(", totalPoints=")
                .append(totalPoints)
                .append(", alliancePoints=")
@@ -57,7 +57,7 @@ public final class District {
 
       @Override
       public int hashCode() {
-        return Objects.hash(isDistrictCampionship, totalPoints, alliancePoints, eliminationPoints,
+        return Objects.hash(isDistrictChampionship, totalPoints, alliancePoints, eliminationPoints,
                             awardPoints, eventKey, qualificationPoints);
       }
 
@@ -66,7 +66,7 @@ public final class District {
         if (this == obj) return true;
         if (!(obj instanceof EventPoints)) return false;
         EventPoints other = (EventPoints) obj;
-        return isDistrictCampionship == other.isDistrictCampionship
+        return isDistrictChampionship == other.isDistrictChampionship
             && totalPoints == other.totalPoints && alliancePoints == other.alliancePoints
             && eliminationPoints == other.eliminationPoints && awardPoints == other.awardPoints
             && Objects.equals(eventKey, other.eventKey)
@@ -124,7 +124,7 @@ public final class District {
           && Objects.equals(eventPoints, other.eventPoints);
     }
 
-    public static Endpoint<List<District.Ranking>> endpointForKey(String districtKey) {
+    public static Endpoint<List<District.Ranking>> endpointForDistrict(String districtKey) {
       return Endpoint.forList("/district/" + districtKey + "/rankings", District.Ranking.class);
     }
   }
