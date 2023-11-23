@@ -129,16 +129,16 @@ public final class District {
     }
   }
 
-  public final String abbrevitation;
+  public final String abbreviation;
   public final String displayName;
   public final String key;
   public final int    year;
 
   @JsonCreator
-  District(@JsonProperty("abbrevitation") String abbrevitation,
+  District(@JsonProperty("abbrevitation") String abbreviation,
            @JsonProperty("display_name") String displayName, @JsonProperty("key") String key,
            @JsonProperty("year") int year) {
-    this.abbrevitation = abbrevitation;
+    this.abbreviation = abbreviation;
     this.displayName = displayName;
     this.key = key;
     this.year = year;
@@ -147,8 +147,8 @@ public final class District {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("District [abbrevitation=")
-           .append(abbrevitation)
+    builder.append("District [abbreviation=")
+           .append(abbreviation)
            .append(", displayName=")
            .append(displayName)
            .append(", key=")
@@ -161,7 +161,7 @@ public final class District {
 
   @Override
   public int hashCode() {
-    return Objects.hash(abbrevitation, displayName, key, year);
+    return Objects.hash(abbreviation, displayName, key, year);
   }
 
   @Override
@@ -169,7 +169,7 @@ public final class District {
     if (this == obj) return true;
     if (!(obj instanceof District)) return false;
     District other = (District) obj;
-    return Objects.equals(abbrevitation, other.abbrevitation)
+    return Objects.equals(abbreviation, other.abbreviation)
         && Objects.equals(displayName, other.displayName) && Objects.equals(key, other.key)
         && year == other.year;
   }
