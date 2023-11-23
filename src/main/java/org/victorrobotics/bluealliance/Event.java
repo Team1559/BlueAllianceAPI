@@ -1,12 +1,8 @@
 package org.victorrobotics.bluealliance;
 
-import java.util.Date;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.IntStream;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
@@ -53,8 +49,8 @@ public final class Event {
            @JsonProperty("event_code") String code, @JsonProperty("event_type") Type type,
            @JsonProperty("district") District district, @JsonProperty("city") String city,
            @JsonProperty("state_prov") String stateProv, @JsonProperty("country") String country,
-           @JsonProperty("start_date") @JsonFormat(pattern = "yyyy-mm-dd") Date startDate,
-           @JsonProperty("end_date") @JsonFormat(pattern = "yyyy-mm-dd") Date endDate,
+           @JsonProperty("start_date") @JsonFormat(pattern = "yyyy-MM-dd") Date startDate,
+           @JsonProperty("end_date") @JsonFormat(pattern = "yyyy-MM-dd") Date endDate,
            @JsonProperty("year") int year) {
       this.key = key;
       this.name = name;
@@ -357,7 +353,7 @@ public final class Event {
 
     @JsonCreator
     Webcast(@JsonProperty("type") Type type, @JsonProperty("channel") String channel,
-            @JsonProperty("date") @JsonFormat(pattern = "yyyy-mm-dd") Date date,
+            @JsonProperty("date") @JsonFormat(pattern = "yyyy-MM-dd") Date date,
             @JsonProperty("file") String file) {
       this.type = type;
       this.channel = channel;
@@ -727,6 +723,44 @@ public final class Event {
     }
   }
 
+  public static final class Date {
+    public final int year;
+    public final int month;
+    public final int day;
+
+    @JsonCreator
+    Date(@JsonFormat(pattern = "yyyy-MM-dd") String str) {
+      year = Integer.parseInt(str.substring(0, 4));
+      month = Integer.parseInt(str.substring(5, 7));
+      day = Integer.parseInt(str.substring(8));
+    }
+
+    @JsonValue
+    @Override
+    public String toString() {
+      StringBuilder builder = new StringBuilder();
+      builder.append(year)
+             .append('-')
+             .append(month)
+             .append('-')
+             .append(day);
+      return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(year, month, day);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj) return true;
+      if (!(obj instanceof Date)) return false;
+      Date other = (Date) obj;
+      return year == other.year && month == other.month && day == other.day;
+    }
+  }
+
   public enum Type {
     REGIONAL(0),
     DISTRICT(1),
@@ -817,8 +851,8 @@ public final class Event {
         @JsonProperty("event_code") String code, @JsonProperty("event_type") Type type,
         @JsonProperty("district") District district, @JsonProperty("city") String city,
         @JsonProperty("state_prov") String stateProv, @JsonProperty("country") String country,
-        @JsonProperty("start_date") @JsonFormat(pattern = "yyyy-mm-dd") Date startDate,
-        @JsonProperty("end_date") @JsonFormat(pattern = "yyyy-mm-dd") Date endDate,
+        @JsonProperty("start_date") @JsonFormat(pattern = "yyyy-MM-dd") Date startDate,
+        @JsonProperty("end_date") @JsonFormat(pattern = "yyyy-MM-dd") Date endDate,
         @JsonProperty("year") int year, @JsonProperty("short_name") String shortName,
         @JsonProperty("event_type_string") String typeString, @JsonProperty("week") Integer week,
         @JsonProperty("address") String address, @JsonProperty("postal_code") String postalCode,
@@ -985,15 +1019,5 @@ public final class Event {
 
   public static Endpoint<List<Event>> endpointForDistrict(String districtKey) {
     return Endpoint.forList("/district/" + districtKey + "/events/simple", Event.class);
-  }
-
-  public static void main(String[] args) {
-    System.out.println(IntStream.range(0, 20)
-                                .mapToObj(Team::endpointForPage)
-                                .map(Endpoint::request)
-                                .map(CompletableFuture::join)
-                                .flatMap(Collection::stream)
-                                .map(team -> team.name)
-                                .reduce("", (n1, n2) -> n1.length() > n2.length() ? n1 : n2));
   }
 }
