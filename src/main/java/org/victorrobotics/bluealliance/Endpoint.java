@@ -70,9 +70,14 @@ public final class Endpoint<T> implements Supplier<T> {
     return value;
   }
 
-  public CompletableFuture<T> request() {
+  public CompletableFuture<T> startRefresh() {
     return HTTP_CLIENT.sendAsync(requestBuilder.build(), BodyHandlers.ofInputStream())
                       .thenApply(this::handleResponse);
+  }
+
+  public Endpoint<T> refresh() {
+    startRefresh().join();
+    return this;
   }
 
   private T handleResponse(HttpResponse<InputStream> response) {
