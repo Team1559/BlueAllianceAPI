@@ -775,7 +775,7 @@ public final class Event {
     PRESEASON(100),
 
     @JsonEnumDefaultValue
-    UNLABLED(-1);
+    UNLABELED(-1);
 
     @JsonValue
     private final int code;
