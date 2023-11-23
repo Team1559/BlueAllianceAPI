@@ -21,8 +21,7 @@ class TestAward {
 
     List<Award.Recipient> recipients = List.of(recipient, recipient2);
 
-    Award award = new Award("award name", Award.Type.WINNER, "event key",
-                            recipients, 2023);
+    Award award = new Award("award name", Award.Type.WINNER, "event key", recipients, 2023);
     assertEquals("event key", award.eventKey);
     assertSame(Award.Type.WINNER, award.type);
     assertEquals("event key", award.eventKey);

@@ -52,7 +52,7 @@ class TestDistrictRanking {
     assertNotNull(endpoint);
 
     List<District.Ranking> districts = endpoint.refresh()
-                                       .get();
+                                               .get();
     assertNotNull(districts);
     assertEquals(134, districts.size());
 
