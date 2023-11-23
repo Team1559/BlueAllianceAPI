@@ -2,8 +2,6 @@ package org.victorrobotics.bluealliance;
 
 import java.util.List;
 
-import org.victorrobotics.bluealliance.ApiStatus.AppVersion;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -15,20 +13,20 @@ import org.junit.jupiter.api.Test;
 class TestApiStatus {
   @Test
   void testConstructors() {
-    AppVersion iosVersion = new AppVersion(-1, -1);
+    ApiStatus.AppVersion iosVersion = new ApiStatus.AppVersion(-1, -1);
     assertEquals(-1, iosVersion.minimum);
     assertEquals(-1, iosVersion.latest);
 
-    AppVersion androidVersion = new AppVersion(5000000, 6000199);
+    ApiStatus.AppVersion androidVersion = new ApiStatus.AppVersion(5000000, 6000199);
     assertEquals(5000000, androidVersion.minimum);
     assertEquals(6000199, androidVersion.latest);
 
     ApiStatus status =
-        new ApiStatus(2023, 2024, false, List.of("2023paca"), iosVersion, androidVersion);
+        new ApiStatus(2023, 2024, false, List.of("event key"), iosVersion, androidVersion);
     assertEquals(2023, status.currentSeason);
     assertEquals(2024, status.maxSeason);
     assertFalse(status.isDatafeedDown);
-    assertEquals(List.of("2023paca"), status.downEvents);
+    assertEquals(List.of("event key"), status.downEvents);
     assertSame(iosVersion, status.iosVersion);
     assertSame(androidVersion, status.androidVersion);
   }
