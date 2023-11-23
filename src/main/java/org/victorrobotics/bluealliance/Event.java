@@ -49,8 +49,8 @@ public final class Event {
            @JsonProperty("event_code") String code, @JsonProperty("event_type") Type type,
            @JsonProperty("district") District district, @JsonProperty("city") String city,
            @JsonProperty("state_prov") String stateProv, @JsonProperty("country") String country,
-           @JsonProperty("start_date") @JsonFormat(pattern = "yyyy-MM-dd") Date startDate,
-           @JsonProperty("end_date") @JsonFormat(pattern = "yyyy-MM-dd") Date endDate,
+           @JsonProperty("start_date") Date startDate,
+           @JsonProperty("end_date") Date endDate,
            @JsonProperty("year") int year) {
       this.key = key;
       this.name = name;
@@ -353,7 +353,7 @@ public final class Event {
 
     @JsonCreator
     Webcast(@JsonProperty("type") Type type, @JsonProperty("channel") String channel,
-            @JsonProperty("date") @JsonFormat(pattern = "yyyy-MM-dd") Date date,
+            @JsonProperty("date") Date date,
             @JsonProperty("file") String file) {
       this.type = type;
       this.channel = channel;
@@ -729,7 +729,8 @@ public final class Event {
     public final int day;
 
     @JsonCreator
-    Date(@JsonFormat(pattern = "yyyy-MM-dd") String str) {
+    Date(String str) {
+      // pattern: yyyy-MM-dd
       year = Integer.parseInt(str.substring(0, 4));
       month = Integer.parseInt(str.substring(5, 7));
       day = Integer.parseInt(str.substring(8));
@@ -851,8 +852,8 @@ public final class Event {
         @JsonProperty("event_code") String code, @JsonProperty("event_type") Type type,
         @JsonProperty("district") District district, @JsonProperty("city") String city,
         @JsonProperty("state_prov") String stateProv, @JsonProperty("country") String country,
-        @JsonProperty("start_date") @JsonFormat(pattern = "yyyy-MM-dd") Date startDate,
-        @JsonProperty("end_date") @JsonFormat(pattern = "yyyy-MM-dd") Date endDate,
+        @JsonProperty("start_date") Date startDate,
+        @JsonProperty("end_date") Date endDate,
         @JsonProperty("year") int year, @JsonProperty("short_name") String shortName,
         @JsonProperty("event_type_string") String typeString, @JsonProperty("week") Integer week,
         @JsonProperty("address") String address, @JsonProperty("postal_code") String postalCode,
