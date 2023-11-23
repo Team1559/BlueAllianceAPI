@@ -115,7 +115,7 @@ public final class Match {
           && Objects.equals(actualTime, other.actualTime);
     }
 
-    public static Endpoint<Match.Simple> endpoint(String matchKey) {
+    public static Endpoint<Match.Simple> endpointForKey(String matchKey) {
       return Endpoint.forSingle("/match/" + matchKey + "/simple", Match.Simple.class);
     }
 
@@ -395,7 +395,7 @@ public final class Match {
         && Objects.equals(blueScore, other.blueScore);
   }
 
-  public static Endpoint<Match> endpoint(String matchKey) {
+  public static Endpoint<Match> endpointForKey(String matchKey) {
     return Endpoint.forSingle("/match/" + matchKey, Match.class);
   }
 

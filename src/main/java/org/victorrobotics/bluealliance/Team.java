@@ -34,7 +34,7 @@ public final class Team {
   public static final class YearsParticipated {
     private YearsParticipated() {}
 
-    public static Endpoint<List<Integer>> endpoint(String teamKey) {
+    public static Endpoint<List<Integer>> endpointForKey(String teamKey) {
       return Endpoint.forList("/team/" + teamKey + "/years_participated", Integer.class);
     }
   }
@@ -99,7 +99,7 @@ public final class Team {
           && Objects.equals(country, other.country);
     }
 
-    public static Endpoint<Team.Simple> endpoint(String teamKey) {
+    public static Endpoint<Team.Simple> endpointForKey(String teamKey) {
       return Endpoint.forSingle("/team/" + teamKey + "/simple", Team.Simple.class);
     }
 
@@ -465,7 +465,7 @@ public final class Team {
         && rookieYear == other.rookieYear;
   }
 
-  public static Endpoint<Team> endpoint(String teamKey) {
+  public static Endpoint<Team> endpointForKey(String teamKey) {
     return Endpoint.forSingle("/team/" + teamKey, Team.class);
   }
 

@@ -112,7 +112,7 @@ public final class Event {
           && year == other.year;
     }
 
-    public static Endpoint<Event.Simple> endpoint(String eventKey) {
+    public static Endpoint<Event.Simple> endpointForKey(String eventKey) {
       return Endpoint.forSingle("/event/" + eventKey + "/simple", Event.Simple.class);
     }
 
@@ -274,7 +274,7 @@ public final class Event {
           && Objects.equals(teams, other.teams) && Objects.equals(status, other.status);
     }
 
-    public static Endpoint<List<PlayoffAlliance>> endpoint(String eventKey) {
+    public static Endpoint<List<PlayoffAlliance>> endpointForKey(String eventKey) {
       return Endpoint.forList("/event/" + eventKey + "/alliance", PlayoffAlliance.class);
     }
   }
@@ -516,7 +516,7 @@ public final class Event {
       return Objects.equals(points, other.points) && Objects.equals(tiebreakers, other.tiebreakers);
     }
 
-    public static Endpoint<DistrictPoints> endpoint(String eventKey) {
+    public static Endpoint<DistrictPoints> endpointForKey(String eventKey) {
       return Endpoint.forSingle("/event/" + eventKey + "/district_points", DistrictPoints.class);
     }
   }
@@ -1001,7 +1001,7 @@ public final class Event {
         && Objects.equals(playoffTypeDescription, other.playoffTypeDescription);
   }
 
-  public static Endpoint<Event> endpoint(String eventKey) {
+  public static Endpoint<Event> endpointForKey(String eventKey) {
     return Endpoint.forSingle("/event/" + eventKey, Event.class);
   }
 

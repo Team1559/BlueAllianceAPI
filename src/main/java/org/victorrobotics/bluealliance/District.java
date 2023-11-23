@@ -124,7 +124,7 @@ public final class District {
           && Objects.equals(eventPoints, other.eventPoints);
     }
 
-    public static Endpoint<List<District.Ranking>> endpoint(String districtKey) {
+    public static Endpoint<List<District.Ranking>> endpointForKey(String districtKey) {
       return Endpoint.forList("/district/" + districtKey + "/rankings", District.Ranking.class);
     }
   }
