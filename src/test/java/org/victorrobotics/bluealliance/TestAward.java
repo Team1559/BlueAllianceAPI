@@ -44,8 +44,7 @@ class TestAward {
     Endpoint<List<Award>> endpoint = Award.endpointForEvent("2023paca");
     assertNotNull(endpoint);
 
-    List<Award> awards = endpoint.refresh()
-                                 .get();
+    List<Award> awards = endpoint.refresh();
     assertNotNull(awards);
     assertEquals(22, awards.size());
 
@@ -76,8 +75,7 @@ class TestAward {
     Endpoint<List<Award>> endpoint = Award.endpointForTeam("frc1559");
     assertNotNull(endpoint);
 
-    List<Award> awards = endpoint.refresh()
-                                 .get();
+    List<Award> awards = endpoint.refresh();
     assertNotNull(awards);
     assertEquals(16, awards.size());
 
@@ -106,8 +104,7 @@ class TestAward {
     Endpoint<List<Award>> endpoint = Award.endpointForTeam("frc1559", 2023);
     assertNotNull(endpoint);
 
-    List<Award> awards = endpoint.refresh()
-                                 .get();
+    List<Award> awards = endpoint.refresh();
     assertNotNull(awards);
     assertEquals(1, awards.size());
 
@@ -136,8 +133,7 @@ class TestAward {
     Endpoint<List<Award>> endpoint = Award.endpointForTeam("frc1559", "2005roc");
     assertNotNull(endpoint);
 
-    List<Award> awards = endpoint.refresh()
-                                 .get();
+    List<Award> awards = endpoint.refresh();
     assertNotNull(awards);
     assertEquals(2, awards.size());
 

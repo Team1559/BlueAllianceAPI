@@ -3,21 +3,25 @@ package org.victorrobotics.bluealliance;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpHeaders;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+
+import okhttp3.CacheControl;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public final class Endpoint<T> implements Supplier<T> {
   public enum Type {
@@ -47,50 +51,71 @@ public final class Endpoint<T> implements Supplier<T> {
   private static final String TBA_API_URL = "https://www.thebluealliance.com/api/v3";
   private static final String TBA_API_KEY = System.getenv("TBA_API_KEY");
 
-  private static final HttpClient HTTP_CLIENT        = HttpClient.newHttpClient();
-  static final ObjectMapper       JSON_OBJECT_MAPPER =
+  private static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
+
+  static final ObjectMapper JSON_OBJECT_MAPPER =
       new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                         .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
                         .disable(DeserializationFeature.WRAP_EXCEPTIONS);
 
-  private final HttpRequest.Builder requestBuilder;
-  private final ObjectReader        jsonReader;
+  private static ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
-  private T value;
+  private final Request.Builder requestBuilder;
+  private final ObjectReader    jsonReader;
+
+  @SuppressWarnings("java:S3077")
+  private volatile T value;
 
   private Endpoint(String endpoint, ObjectReader reader) {
-    this.jsonReader = reader;
-    requestBuilder = HttpRequest.newBuilder()
-                                .uri(URI.create(TBA_API_URL + endpoint))
-                                .GET()
-                                .setHeader("X-TBA-Auth-Key", TBA_API_KEY);
+    jsonReader = reader;
+    requestBuilder = new Request.Builder().url(TBA_API_URL + endpoint)
+                                          .get()
+                                          .header("X-TBA-Auth-Key", TBA_API_KEY)
+                                          .cacheControl(CacheControl.FORCE_NETWORK);
   }
 
   public T get() {
     return value;
   }
 
-  public CompletableFuture<T> startRefresh() {
-    return HTTP_CLIENT.sendAsync(requestBuilder.build(), BodyHandlers.ofInputStream())
-                      .thenApply(this::handleResponse);
+  public T refresh() {
+    try {
+      Call call = HTTP_CLIENT.newCall(requestBuilder.build());
+      Response response = call.execute();
+      update(response);
+    } catch (IOException e) {}
+
+    return get();
   }
 
-  public Endpoint<T> refresh() {
-    startRefresh().join();
-    return this;
+  public CompletableFuture<T> refreshAsync() {
+    return CompletableFuture.supplyAsync(requestBuilder::build, EXECUTOR)
+                            .thenApply(HTTP_CLIENT::newCall)
+                            .thenApply(call -> {
+                              try {
+                                return call.execute();
+                              } catch (IOException e) {
+                                throw new CompletionException(e);
+                              }
+                            })
+                            .thenAccept(this::update)
+                            .thenApply(x -> get());
   }
 
-  private T handleResponse(HttpResponse<InputStream> response) {
-    int statusCode = response.statusCode();
-    if (statusCode != 200 && statusCode != 304) return value;
+  private void update(Response response) {
+    int statusCode = response.code();
+    if (statusCode != 200 && statusCode != 304) return;
 
-    HttpHeaders headers = response.headers();
-    headers.firstValue("etag")
-           .ifPresent(eTag -> requestBuilder.setHeader("If-None-Match", eTag));
+    String etag = response.headers()
+                          .get("etag");
+    if (etag != null) {
+      requestBuilder.header("If-None-Match", etag);
+    }
 
-    if (statusCode != 200) return value;
+    if (statusCode != 200) return;
 
-    try (InputStream body = response.body()) {
+    try (InputStream body = response.body()
+                                    .byteStream()) {
       T result = jsonReader.readValue(body);
       if (result != null && !result.equals(value)) {
         value = result;
@@ -98,8 +123,6 @@ public final class Endpoint<T> implements Supplier<T> {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    return value;
   }
 
   @SuppressWarnings("unchecked")
@@ -132,5 +155,15 @@ public final class Endpoint<T> implements Supplier<T> {
       ENDPOINTS.put(endpoint, value);
     }
     return (Endpoint<Map<String, T>>) value.get();
+  }
+
+  public static void setExecutor(ExecutorService executor) {
+    Objects.requireNonNull(executor);
+    EXECUTOR.shutdown();
+    EXECUTOR = executor;
+  }
+
+  public static void shutdown() {
+    EXECUTOR.shutdown();
   }
 }
