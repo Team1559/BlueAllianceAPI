@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
@@ -23,7 +24,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public final class Endpoint<T> implements Supplier<T> {
+public final class Endpoint<T> implements Supplier<Optional<T>> {
   public enum Type {
     SINGLE,
     ARRAY,
@@ -64,7 +65,7 @@ public final class Endpoint<T> implements Supplier<T> {
   private final ObjectReader    jsonReader;
 
   @SuppressWarnings("java:S3077")
-  private volatile T value;
+  private volatile Optional<T> value;
 
   private Endpoint(String endpoint, ObjectReader reader) {
     jsonReader = reader;
@@ -72,13 +73,14 @@ public final class Endpoint<T> implements Supplier<T> {
                                           .get()
                                           .header("X-TBA-Auth-Key", TBA_API_KEY)
                                           .cacheControl(CacheControl.FORCE_NETWORK);
+    value = Optional.empty();
   }
 
-  public T get() {
+  public Optional<T> get() {
     return value;
   }
 
-  public T refresh() {
+  public Optional<T> refresh() {
     try {
       Call call = HTTP_CLIENT.newCall(requestBuilder.build());
       Response response = call.execute();
@@ -88,7 +90,7 @@ public final class Endpoint<T> implements Supplier<T> {
     return get();
   }
 
-  public CompletableFuture<T> refreshAsync() {
+  public CompletableFuture<Optional<T>> refreshAsync() {
     return CompletableFuture.supplyAsync(requestBuilder::build, EXECUTOR)
                             .thenApply(HTTP_CLIENT::newCall)
                             .thenApply(call -> {
@@ -117,8 +119,9 @@ public final class Endpoint<T> implements Supplier<T> {
     try (InputStream body = response.body()
                                     .byteStream()) {
       T result = jsonReader.readValue(body);
-      if (result != null && !result.equals(value)) {
-        value = result;
+      if (value.isEmpty() || !value.get()
+                                   .equals(result)) {
+        value = Optional.of(result);
       }
     } catch (IOException e) {
       e.printStackTrace();

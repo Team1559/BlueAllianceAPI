@@ -36,7 +36,7 @@ class TestApiStatus {
     Endpoint<ApiStatus> endpoint = ApiStatus.endpoint();
     assertNotNull(endpoint);
 
-    ApiStatus status = endpoint.refresh();
+    ApiStatus status = endpoint.refresh().get();
     assertNotEquals(0, status.currentSeason);
     assertNotEquals(0, status.maxSeason);
     assertNotNull(status.downEvents);

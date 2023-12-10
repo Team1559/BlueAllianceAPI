@@ -27,7 +27,7 @@ class TestDistrict {
     Endpoint<List<District>> endpoint = District.endpointForYear(2023);
     assertNotNull(endpoint);
 
-    List<District> districts = endpoint.refresh();
+    List<District> districts = endpoint.refresh().get();
     assertNotNull(districts);
     assertEquals(11, districts.size());
 
@@ -49,7 +49,7 @@ class TestDistrict {
     Endpoint<List<District>> endpoint = District.endpointForTeam("frc1086");
     assertNotNull(endpoint);
 
-    List<District> districts = endpoint.refresh();
+    List<District> districts = endpoint.refresh().get();
     assertNotNull(districts);
     assertEquals(9, districts.size());
 
