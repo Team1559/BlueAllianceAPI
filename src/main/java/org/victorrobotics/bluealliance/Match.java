@@ -140,7 +140,7 @@ public final class Match {
       BLUE("blue"),
 
       @JsonEnumDefaultValue
-      UNKNOWN("???");
+      NONE("");
 
       @JsonValue
       private final String id;
