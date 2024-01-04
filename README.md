@@ -7,6 +7,8 @@ Requires JDK 11 or higher. Uses [Jackson](https://github.com/FasterXML/jackson) 
 - Windows: `./gradlew.bat build`
 
 ## Usage
+The latest release build can be found on [Maven Central](https://central.sonatype.com/artifact/org.victorrobotics.bluealliance/blue-alliance-api) for inclusion in your project. Alternatively, build it yourself and add it to your classpath.
+
 You will need to obtain your own API key from The Blue Alliance, which can be done from the [Account Dashboard](https://www.thebluealliance.com/account). See their [API Docs](https://www.thebluealliance.com/apidocs) for more details.
 
 To authenticate using your API key, simply set it to an environment variable called `TBA_API_KEY`, and the library will handle the rest.
@@ -22,20 +24,18 @@ Download data using a static `endpoint` method in one of the following classes:
 
 These methods return an `Endpoint`, which is responsible for caching responses and managing invalidation. These objects only exist as long as a reference is kept by the client (timing may vary based on garbage collection); however, an identical call to the same endpoint will return the same object, if present.
 
-Endpoints use an asynchronous model, returning a `CompleteableFuture` for their respective data. For example, to get a list of matches played by team 1559 in 2023:
+To access an endpoint, you have two options. You can either request the data synchronously using the `refresh` method, or asynchronously using the `refreshAsync` method (which returns a `CompletableFuture`). For example, to get a list of matches played by team 1559 in 2023:
 
 ```java
 Endpoint<List<Match>> endpoint = Match.endpointForTeam("frc1559", 2023);
-Future<List<Match>> future = endpoint.request();
-List<Match> matches;
-try {
-    matches = future.get();
-} catch (InterruptedException | ExecutionException e) {
+Optional<List<Match>> optional = endpoint.refresh();
+if (optional.isPresent()) {
+    List<Match> matches = optional.get();
     ...
 }
 ```
 
-Responses from the server will be cached for the duration of the returned `max-age` header, and the server's version tags are used to reduce unnecessary API calls.
+The server's etags are used to reduce unnecessary network traffic.
 
 ## Endpoints
 Currently, the following TBA data endpoints are implemented:
