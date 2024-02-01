@@ -637,7 +637,7 @@ public final class Event {
              @JsonProperty("sort_order_info") List<DataInfo> sortOrder) {
       this.rankings = rankings == null ? null : List.copyOf(rankings);
       this.extraStats = extraStats == null ? null : List.copyOf(extraStats);
-      this.sortOrder = extraStats == null ? null : List.copyOf(sortOrder);
+      this.sortOrder = sortOrder == null ? null : List.copyOf(sortOrder);
     }
 
     @Override
@@ -668,8 +668,8 @@ public final class Event {
           && Objects.equals(sortOrder, other.sortOrder);
     }
 
-    public static Endpoint<List<Event.Rankings>> endpointForEvent(String eventKey) {
-      return Endpoint.forList("/event/" + eventKey + "/rankings", Event.Rankings.class);
+    public static Endpoint<Event.Rankings> endpointForEvent(String eventKey) {
+      return Endpoint.forSingle("/event/" + eventKey + "/rankings", Event.Rankings.class);
     }
   }
 
