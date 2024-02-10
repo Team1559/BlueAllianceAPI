@@ -4,7 +4,7 @@ plugins {
   id 'signing'
 }
 
-version = '2023-beta-4'
+version = '2023-beta-5'
 
 repositories {
   mavenCentral()
@@ -66,7 +66,7 @@ publishing {
       pom {
         name = 'Blue Alliance API'
         description = 'Access FRC event data from The Blue Alliance'
-        url = 'http://github.com/Team1559/BlueAllianceAPI'
+        url = 'https://github.com/Team1559/BlueAllianceAPI'
         inceptionYear = '2023'
 
         licenses {
@@ -92,7 +92,7 @@ publishing {
         scm {
           connection = 'scm:git:git://github.com/Team1559/BlueAllianceAPI.git'
           developerConnection = 'scm:git:ssh://github.com:Team1559/BlueAllianceAPI.git'
-          url = 'https://github.com/Team1559/DTLib/tree/master'
+          url = 'https://github.com/Team1559/BlueAllianceAPI'
         }
       }
     }
