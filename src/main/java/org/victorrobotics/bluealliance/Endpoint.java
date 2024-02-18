@@ -25,28 +25,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public final class Endpoint<T> implements Supplier<Optional<T>> {
-  public enum Type {
-    SINGLE,
-    ARRAY,
-    LIST,
-    MAP;
-
-    public ObjectReader readerFor(Class<?> type) {
-      switch (this) {
-        case SINGLE:
-          return JSON_OBJECT_MAPPER.readerFor(type);
-        case ARRAY:
-          return JSON_OBJECT_MAPPER.readerForArrayOf(type);
-        case LIST:
-          return JSON_OBJECT_MAPPER.readerForListOf(type);
-        case MAP:
-          return JSON_OBJECT_MAPPER.readerForMapOf(type);
-        default:
-          return null;
-      }
-    }
-  }
-
   private static final Map<String, WeakReference<Endpoint<?>>> ENDPOINTS = new HashMap<>();
 
   private static final String TBA_API_URL = "https://www.thebluealliance.com/api/v3";
@@ -56,8 +34,7 @@ public final class Endpoint<T> implements Supplier<Optional<T>> {
 
   static final ObjectMapper JSON_OBJECT_MAPPER =
       new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                        .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
-                        .disable(DeserializationFeature.WRAP_EXCEPTIONS);
+                        .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
 
   private static ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
