@@ -9,17 +9,30 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public interface ScoreBreakdown {
-  @SuppressWarnings("java:S1301") // replace switch with if
   static ScoreBreakdown of(String matchKey, JsonNode json) {
+    if (matchKey == null || matchKey.length() < 4) {
+      return null;
+    }
+
+    int year;
     try {
-      int year = Integer.parseInt(matchKey.substring(0, 4));
-      switch (year) {
-        case 2023:
-          return Endpoint.JSON_OBJECT_MAPPER.treeToValue(json, ChargedUp2023.class);
-        default:
-          return null;
-      }
-    } catch (NumberFormatException | IndexOutOfBoundsException | JsonProcessingException e) {
+      year = Integer.parseInt(matchKey.substring(0, 4));
+    } catch (NumberFormatException e) {
+      return null;
+    }
+
+    Class<? extends ScoreBreakdown> type = switch (year) {
+      case 2023 -> ChargedUp2023.class;
+      default -> null;
+    };
+
+    if (type == null) {
+      return null;
+    }
+
+    try {
+      return Endpoint.JSON_OBJECT_MAPPER.treeToValue(json, type);
+    } catch (JsonProcessingException e) {
       return null;
     }
   }
