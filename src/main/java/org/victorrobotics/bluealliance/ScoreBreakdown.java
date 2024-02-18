@@ -23,6 +23,7 @@ public interface ScoreBreakdown {
 
     Class<? extends ScoreBreakdown> type = switch (year) {
       case 2023 -> ChargedUp2023.class;
+      case 2024 -> Crescendo2024.class;
       default -> null;
     };
 
@@ -168,6 +169,140 @@ public interface ScoreBreakdown {
 
     private static boolean isLevel(String bridgeState) {
       return "Level".equals(bridgeState);
+    }
+  }
+
+  public static record Crescendo2024(List<Boolean> autoLines,
+                                     int autoSpeakerNoteCount,
+                                     int autoAmpNoteCount,
+                                     int autoLeavePoints,
+                                     int autoSpeakerNotePoints,
+                                     int autoAmpNotePoints,
+                                     int autoTotalNotePoints,
+                                     int autoPoints,
+                                     int teleopAmpNoteCount,
+                                     int teleopSpeakerNoteCount,
+                                     int teleopSpeakerNoteAmplifiedCount,
+                                     int teleopAmpNotePoints,
+                                     int teleopSpeakerNotePoints,
+                                     int teleopSpeakerNoteAmplifiedPoints,
+                                     int teleopTotalNotePoints,
+                                     int teleopPoints,
+                                     boolean trapCenterStage,
+                                     boolean trapStageLeft,
+                                     boolean trapStageRight,
+                                     boolean micCenterStage,
+                                     boolean micStageLeft,
+                                     boolean micStageRight,
+                                     List<EndgameState> endGameRobots,
+                                     int endGameOnStagePoints,
+                                     int endGameHarmonyPoints,
+                                     int endGameParkPoints,
+                                     int endGameSpotLightBonusPoints,
+                                     int endGameTotalStagePoints,
+                                     int endGameNoteInTrapPoints,
+                                     int ensembleBonusOnStageRobotsThreshold,
+                                     int ensembleBonusStagePointsThreshold,
+                                     boolean ensembleBonusAchieved,
+                                     int melodyBonusThreshold,
+                                     int melodyBonusThresholdCoop,
+                                     int melodyBonusThresholdNonCoop,
+                                     boolean melodyBonusAchieved,
+                                     boolean coopNotePlayed,
+                                     boolean coopertitionBonusAchieved,
+                                     boolean coopertitionCriteriaMet,
+                                     boolean g206Penalty,
+                                     boolean g408Penalty,
+                                     boolean g424Penalty,
+                                     int foulCount,
+                                     int techFoulCount,
+                                     int foulPoints,
+                                     int adjustPoints,
+                                     int totalPoints,
+                                     int rankingPoints)
+      implements ScoreBreakdown {
+    public enum EndgameState {
+      NONE("None"),
+      PARKED("Parked"),
+      ONSTAGE("Onstage"),
+      HARMONY("Harmony");
+
+      @JsonValue
+      private final String id;
+
+      EndgameState(String value) {
+        this.id = value;
+      }
+    }
+
+    @JsonCreator
+    public Crescendo2024(@JsonProperty("adjustPoints") int adjustPoints,
+                         @JsonProperty("autoAmpNoteCount") int autoAmpNoteCount,
+                         @JsonProperty("autoAmpNotePoints") int autoAmpNotePoints,
+                         @JsonProperty("autoLeavePoints") int autoLeavePoints,
+                         @JsonProperty("autoLineRobot1") String autoLineRobot1,
+                         @JsonProperty("autoLineRobot2") String autoLineRobot2,
+                         @JsonProperty("autoLineRobot3") String autoLineRobot3,
+                         @JsonProperty("autoPoints") int autoPoints,
+                         @JsonProperty("autoSpeakerNoteCount") int autoSpeakerNoteCount,
+                         @JsonProperty("autoSpeakerNotePoints") int autoSpeakerNotePoints,
+                         @JsonProperty("autoTotalNotePoints") int autoTotalNotePoints,
+                         @JsonProperty("coopNotePlayed") boolean coopNotePlayed,
+                         @JsonProperty("coopertitionBonusAchieved") boolean coopertitionBonusAchieved,
+                         @JsonProperty("coopertitionCriteriaMet") boolean coopertitionCriteriaMet,
+                         @JsonProperty("endGameHarmonyPoints") int endGameHarmonyPoints,
+                         @JsonProperty("endGameNoteInTrapPoints") int endGameNoteInTrapPoints,
+                         @JsonProperty("endGameOnStagePoints") int endGameOnStagePoints,
+                         @JsonProperty("endGameParkPoints") int endGameParkPoints,
+                         @JsonProperty("endGameRobot1") EndgameState endGameRobot1,
+                         @JsonProperty("endGameRobot2") EndgameState endGameRobot2,
+                         @JsonProperty("endGameRobot3") EndgameState endGameRobot3,
+                         @JsonProperty("endGameSpotLightBonusPoints") int endGameSpotLightBonusPoints,
+                         @JsonProperty("endGameTotalStagePoints") int endGameTotalStagePoints,
+                         @JsonProperty("ensembleBonusAchieved") boolean ensembleBonusAchieved,
+                         @JsonProperty("ensembleBonusOnStageRobotsThreshold") int ensembleBonusOnStageRobotsThreshold,
+                         @JsonProperty("ensembleBonusStagePointsThreshold") int ensembleBonusStagePointsThreshold,
+                         @JsonProperty("foulCount") int foulCount,
+                         @JsonProperty("foulPoints") int foulPoints,
+                         @JsonProperty("g206Penalty") boolean g206Penalty,
+                         @JsonProperty("g408Penalty") boolean g408Penalty,
+                         @JsonProperty("g424Penalty") boolean g424Penalty,
+                         @JsonProperty("melodyBonusAchieved") boolean melodyBonusAchieved,
+                         @JsonProperty("melodyBonusThreshold") int melodyBonusThreshold,
+                         @JsonProperty("melodyBonusThresholdCoop") int melodyBonusThresholdCoop,
+                         @JsonProperty("melodyBonusThresholdNonCoop") int melodyBonusThresholdNonCoop,
+                         @JsonProperty("micCenterStage") boolean micCenterStage,
+                         @JsonProperty("micStageLeft") boolean micStageLeft,
+                         @JsonProperty("micStageRight") boolean micStageRight,
+                         @JsonProperty("rp") int rp,
+                         @JsonProperty("techFoulCount") int techFoulCount,
+                         @JsonProperty("teleopAmpNoteCount") int teleopAmpNoteCount,
+                         @JsonProperty("teleopAmpNotePoints") int teleopAmpNotePoints,
+                         @JsonProperty("teleopPoints") int teleopPoints,
+                         @JsonProperty("teleopSpeakerNoteAmplifiedCount") int teleopSpeakerNoteAmplifiedCount,
+                         @JsonProperty("teleopSpeakerNoteAmplifiedPoints") int teleopSpeakerNoteAmplifiedPoints,
+                         @JsonProperty("teleopSpeakerNoteCount") int teleopSpeakerNoteCount,
+                         @JsonProperty("teleopSpeakerNotePoints") int teleopSpeakerNotePoints,
+                         @JsonProperty("teleopTotalNotePoints") int teleopTotalNotePoints,
+                         @JsonProperty("totalPoints") int totalPoints,
+                         @JsonProperty("trapCenterStage") boolean trapCenterStage,
+                         @JsonProperty("trapStageLeft") boolean trapStageLeft,
+                         @JsonProperty("trapStageRight") boolean trapStageRight) {
+      this(List.of(booleanFromYesNo(autoLineRobot1), booleanFromYesNo(autoLineRobot2),
+                   booleanFromYesNo(autoLineRobot3)),
+           autoSpeakerNoteCount, autoAmpNoteCount, autoLeavePoints, autoSpeakerNotePoints,
+           autoAmpNotePoints, autoTotalNotePoints, autoPoints, teleopAmpNoteCount,
+           teleopSpeakerNoteCount, teleopSpeakerNoteAmplifiedCount, teleopAmpNotePoints,
+           teleopSpeakerNotePoints, teleopSpeakerNoteAmplifiedPoints, teleopTotalNotePoints,
+           teleopPoints, trapCenterStage, trapStageLeft, trapStageRight, micCenterStage,
+           micStageLeft, micStageRight, List.of(endGameRobot1, endGameRobot2, endGameRobot3),
+           endGameOnStagePoints, endGameHarmonyPoints, endGameParkPoints,
+           endGameSpotLightBonusPoints, endGameTotalStagePoints, endGameNoteInTrapPoints,
+           ensembleBonusOnStageRobotsThreshold, ensembleBonusStagePointsThreshold,
+           ensembleBonusAchieved, melodyBonusThreshold, melodyBonusThresholdCoop,
+           melodyBonusThresholdNonCoop, melodyBonusAchieved, coopNotePlayed,
+           coopertitionBonusAchieved, coopertitionCriteriaMet, g206Penalty, g408Penalty,
+           g424Penalty, foulCount, techFoulCount, foulPoints, adjustPoints, totalPoints, rp);
     }
   }
 
