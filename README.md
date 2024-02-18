@@ -101,4 +101,4 @@ Currently, the following TBA data endpoints are implemented:
 - /teams/{year}/{page_num}/keys
 - /teams/{year}/{page_num}/simple
 
-Match score breakdowns are only supported for 2023 (for the moment). For 2015-2022, those fields will simply be `null`.
+Match score breakdowns are currently only supported for 2023-2024. For unsupported years, those fields will be an `UnknownScoreBreakdown`.

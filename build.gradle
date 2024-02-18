@@ -4,7 +4,7 @@ plugins {
   id 'signing'
 }
 
-version = '2023-beta-5'
+version = '2024.0.0'
 
 repositories {
   mavenCentral()
