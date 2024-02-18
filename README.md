@@ -1,4 +1,7 @@
 # Blue Alliance API
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.victorrobotics.bluealliance/blue-alliance-api/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.victorrobotics.bluealliance/blue-alliance-api)
+
 A Java library binding to access FRC event data from [The Blue Alliance](https://www.thebluealliance.com), using their Read API v3.
 
 ## Build
