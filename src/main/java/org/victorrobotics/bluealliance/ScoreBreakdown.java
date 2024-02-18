@@ -8,9 +8,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public interface ScoreBreakdown {
+public sealed interface ScoreBreakdown {
+  public static record UnknownScoreBreakdown() implements ScoreBreakdown {}
+
   static ScoreBreakdown of(String matchKey, JsonNode json) {
-    if (matchKey == null || matchKey.length() < 4) {
+    if (json == null || matchKey == null || matchKey.length() < 4) {
       return null;
     }
 
@@ -24,12 +26,8 @@ public interface ScoreBreakdown {
     Class<? extends ScoreBreakdown> type = switch (year) {
       case 2023 -> ChargedUp2023.class;
       case 2024 -> Crescendo2024.class;
-      default -> null;
+      default -> UnknownScoreBreakdown.class;
     };
-
-    if (type == null) {
-      return null;
-    }
 
     try {
       return Endpoint.JSON_OBJECT_MAPPER.treeToValue(json, type);
