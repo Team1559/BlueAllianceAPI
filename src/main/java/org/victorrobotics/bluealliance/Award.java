@@ -1,48 +1,18 @@
 package org.victorrobotics.bluealliance;
 
 import java.util.List;
-import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public final class Award {
-  public static final class Recipient {
-    public final String teamKey;
-    public final String awardee;
-
-    @JsonCreator
-    Recipient(@JsonProperty("team_key") String teamKey, @JsonProperty("awardee") String awardee) {
-      this.teamKey = teamKey;
-      this.awardee = awardee;
-    }
-
-    @Override
-    public String toString() {
-      StringBuilder builder = new StringBuilder();
-      builder.append("Recipient [teamKey=")
-             .append(teamKey)
-             .append(", awardee=")
-             .append(awardee)
-             .append("]");
-      return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(teamKey, awardee);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (!(obj instanceof Recipient)) return false;
-      Recipient other = (Recipient) obj;
-      return Objects.equals(teamKey, other.teamKey) && Objects.equals(awardee, other.awardee);
-    }
-  }
+public record Award(@JsonProperty("name") String name,
+                    @JsonProperty("award_type") Type type,
+                    @JsonProperty("event_key") String eventKey,
+                    @JsonProperty("recipient_list") List<Recipient> recipients,
+                    @JsonProperty("year") int year) {
+  public static record Recipient(@JsonProperty("team_key") String teamKey,
+                                 @JsonProperty("awardee") String awardee) {}
 
   public enum Type {
     CHAIRMANS(0),
@@ -139,56 +109,6 @@ public final class Award {
     Type(int id) {
       this.id = id;
     }
-  }
-
-  public final String          name;
-  public final Type            type;
-  public final String          eventKey;
-  public final List<Recipient> recipients;
-  public final int             year;
-
-  @JsonCreator
-  Award(@JsonProperty("name") String name, @JsonProperty("award_type") Type type,
-        @JsonProperty("event_key") String eventKey,
-        @JsonProperty("recipient_list") List<Recipient> recipients,
-        @JsonProperty("year") int year) {
-    this.name = name;
-    this.type = type;
-    this.eventKey = eventKey;
-    this.recipients = recipients == null ? null : List.copyOf(recipients);
-    this.year = year;
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Award [name=")
-           .append(name)
-           .append(", type=")
-           .append(type)
-           .append(", eventKey=")
-           .append(eventKey)
-           .append(", recipients=")
-           .append(recipients)
-           .append(", year=")
-           .append(year)
-           .append("]");
-    return builder.toString();
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(name, type, eventKey, recipients, year);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (!(obj instanceof Award)) return false;
-    Award other = (Award) obj;
-    return Objects.equals(name, other.name) && type == other.type
-        && Objects.equals(eventKey, other.eventKey) && Objects.equals(recipients, other.recipients)
-        && year == other.year;
   }
 
   public static Endpoint<List<Award>> endpointForEvent(String eventKey) {
