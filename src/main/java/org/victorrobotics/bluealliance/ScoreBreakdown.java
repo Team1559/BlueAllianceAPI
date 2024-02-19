@@ -229,14 +229,19 @@ public sealed interface ScoreBreakdown {
     public enum EndgameState {
       NONE("None"),
       PARKED("Parked"),
-      ONSTAGE("Onstage"),
-      HARMONY("Harmony");
+      STAGE_LEFT("StageLeft"),
+      STAGE_RIGHT("StageRight"),
+      STAGE_CENTER("CenterStage");
 
       @JsonValue
       private final String id;
 
       EndgameState(String value) {
         this.id = value;
+      }
+
+      public boolean isOnstage() {
+        return ordinal() >= 2;
       }
     }
 
