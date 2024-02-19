@@ -70,6 +70,7 @@ Currently, the following TBA data endpoints are implemented:
 - /events/{year}/simple
 - /match/{match_key}
 - /match/{match_key}/simple
+- /match/{match_key}/zebra_motionworks
 - /status
 - /team/{team_key}
 - /team/{team_key}/awards
