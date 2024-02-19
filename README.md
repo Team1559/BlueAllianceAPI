@@ -5,7 +5,7 @@
 A Java library binding to access FRC event data from [The Blue Alliance](https://www.thebluealliance.com), using their Read API v3.
 
 ## Build
-Requires JDK 11 or higher. Uses [Jackson](https://github.com/FasterXML/jackson) for JSON decoding. Build with the included Gradle wrapper:
+Requires JDK 17 or higher. Uses [Jackson](https://github.com/FasterXML/jackson) for JSON decoding. Build with the included Gradle wrapper:
 - MacOS/Linux: `./gradlew build`
 - Windows: `./gradlew.bat build`
 
