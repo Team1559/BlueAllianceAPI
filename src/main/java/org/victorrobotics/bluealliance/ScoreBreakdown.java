@@ -1,5 +1,6 @@
 package org.victorrobotics.bluealliance;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -154,17 +155,17 @@ public sealed interface ScoreBreakdown {
                          @JsonProperty("totalChargeStationPoints") int totalChargeStationPoints,
                          @JsonProperty("teleopPoints") int teleopPoints,
                          @JsonProperty("totalPoints") int totalPoints) {
-      this(List.of(booleanFromYesNo(mobilityRobot1), booleanFromYesNo(mobilityRobot2),
-                   booleanFromYesNo(mobilityRobot3)),
+      this(Arrays.asList(booleanFromYesNo(mobilityRobot1), booleanFromYesNo(mobilityRobot2),
+                         booleanFromYesNo(mobilityRobot3)),
            autoCommunity, autoGamePieceCount,
-           List.of(booleanFromYesNo(autoChargeStationRobot1),
-                   booleanFromYesNo(autoChargeStationRobot2),
-                   booleanFromYesNo(autoChargeStationRobot3)),
+           Arrays.asList(booleanFromYesNo(autoChargeStationRobot1),
+                         booleanFromYesNo(autoChargeStationRobot2),
+                         booleanFromYesNo(autoChargeStationRobot3)),
            isBridgeLevel(autoBridgeState), autoDocked, autoMobilityPoints, autoGamePiecePoints,
            autoChargeStationPoints, autoPoints, teleopCommunity, teleopGamePieceCount,
            extraGamePieceCount, teleopGamePiecePoints, teleopPoints,
-           List.of(endGameChargeStationRobot1, endGameChargeStationRobot2,
-                   endGameChargeStationRobot3),
+           Arrays.asList(endGameChargeStationRobot1, endGameChargeStationRobot2,
+                         endGameChargeStationRobot3),
            isBridgeLevel(endgameBridgeState), endGameParkPoints, endGameChargeStationPoints, links,
            linkPoints, sustainabilityBonusAchieved, activationBonus, totalChargeStationPoints,
            coopPieceCount, coopertitionCriteriaMet, foulCount, techFoulCount, foulPoints,
@@ -292,14 +293,14 @@ public sealed interface ScoreBreakdown {
                          @JsonProperty("trapCenterStage") boolean trapCenterStage,
                          @JsonProperty("trapStageLeft") boolean trapStageLeft,
                          @JsonProperty("trapStageRight") boolean trapStageRight) {
-      this(List.of(booleanFromYesNo(autoLineRobot1), booleanFromYesNo(autoLineRobot2),
-                   booleanFromYesNo(autoLineRobot3)),
+      this(Arrays.asList(booleanFromYesNo(autoLineRobot1), booleanFromYesNo(autoLineRobot2),
+                         booleanFromYesNo(autoLineRobot3)),
            autoSpeakerNoteCount, autoAmpNoteCount, autoLeavePoints, autoSpeakerNotePoints,
            autoAmpNotePoints, autoTotalNotePoints, autoPoints, teleopAmpNoteCount,
            teleopSpeakerNoteCount, teleopSpeakerNoteAmplifiedCount, teleopAmpNotePoints,
            teleopSpeakerNotePoints, teleopSpeakerNoteAmplifiedPoints, teleopTotalNotePoints,
            teleopPoints, trapCenterStage, trapStageLeft, trapStageRight, micCenterStage,
-           micStageLeft, micStageRight, List.of(endGameRobot1, endGameRobot2, endGameRobot3),
+           micStageLeft, micStageRight, Arrays.asList(endGameRobot1, endGameRobot2, endGameRobot3),
            endGameOnStagePoints, endGameHarmonyPoints, endGameParkPoints,
            endGameSpotLightBonusPoints, endGameTotalStagePoints, endGameNoteInTrapPoints,
            ensembleBonusOnStageRobotsThreshold, ensembleBonusStagePointsThreshold,

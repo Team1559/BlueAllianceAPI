@@ -34,7 +34,8 @@ public final class Endpoint<T> implements Supplier<Optional<T>> {
 
   static final ObjectMapper JSON_OBJECT_MAPPER =
       new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                        .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE);
+                        .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE)
+                        .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL);
 
   private static ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
