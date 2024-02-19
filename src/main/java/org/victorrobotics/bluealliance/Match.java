@@ -127,6 +127,25 @@ public record Match(String key,
     }
   }
 
+  public static record Zebra(String key,
+                             List<Double> times,
+                             List<Zebra.Team> redAlliance,
+                             List<Zebra.Team> blueAlliance) {
+    public static record Team(@JsonProperty("team_key") String key,
+                              @JsonProperty("xs") List<Double> xPositions,
+                              @JsonProperty("ys") List<Double> yPositions) {}
+
+    @JsonCreator
+    public Zebra(@JsonProperty("key") String key, @JsonProperty("times") List<Double> times,
+                 @JsonProperty("alliances") Map<String, List<Team>> alliances) {
+      this(key, times, alliances.get("red"), alliances.get("blue"));
+    }
+
+    public static Endpoint<Zebra> endpointForMatch(String matchKey) {
+      return Endpoint.forSingle("/match/" + matchKey + "/zebra_motionworks", Match.Zebra.class);
+    }
+  }
+
   public enum Level {
     QUALIFICATION("qm"),
     QUARTERFINAL("qf"),
