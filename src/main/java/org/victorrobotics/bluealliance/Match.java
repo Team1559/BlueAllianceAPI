@@ -44,17 +44,17 @@ public record Match(String key,
     }
   }
 
-  public static record Simple(String key,
-                              Level level,
-                              int setNumber,
-                              int matchNumber,
-                              Alliance redAlliance,
-                              Alliance blueAlliance,
-                              Color winner,
-                              String eventKey,
-                              Date scheduledTime,
-                              Date predictedTime,
-                              Date actualTime) {
+  public record Simple(String key,
+                       Level level,
+                       int setNumber,
+                       int matchNumber,
+                       Alliance redAlliance,
+                       Alliance blueAlliance,
+                       Color winner,
+                       String eventKey,
+                       Date scheduledTime,
+                       Date predictedTime,
+                       Date actualTime) {
     @JsonCreator
     public Simple(@JsonProperty("key") String key, @JsonProperty("comp_level") Level level,
                   @JsonProperty("set_number") int setNumber,
@@ -89,10 +89,10 @@ public record Match(String key,
     }
   }
 
-  public static record Alliance(@JsonProperty("score") int score,
-                                @JsonProperty("team_keys") List<String> teamKeys,
-                                @JsonProperty("surrogate_team_keys") List<String> surrogateTeamKeys,
-                                @JsonProperty("dq_team_keys") List<String> disqualifiedTeamKeys) {
+  public record Alliance(@JsonProperty("score") int score,
+                         @JsonProperty("team_keys") List<String> teamKeys,
+                         @JsonProperty("surrogate_team_keys") List<String> surrogateTeamKeys,
+                         @JsonProperty("dq_team_keys") List<String> disqualifiedTeamKeys) {
     public enum Color {
       RED("red"),
       BLUE("blue"),
@@ -109,8 +109,8 @@ public record Match(String key,
     }
   }
 
-  public static record Video(@JsonProperty("type") Type type,
-                             @JsonProperty("key") String key) {
+  public record Video(@JsonProperty("type") Type type,
+                      @JsonProperty("key") String key) {
     public enum Type {
       YOUTUBE("youtube"),
       BLUE_ALLIANCE("tba"),
@@ -127,13 +127,13 @@ public record Match(String key,
     }
   }
 
-  public static record Zebra(String key,
-                             List<Double> times,
-                             List<Zebra.Team> redAlliance,
-                             List<Zebra.Team> blueAlliance) {
-    public static record Team(@JsonProperty("team_key") String key,
-                              @JsonProperty("xs") List<Double> xPositions,
-                              @JsonProperty("ys") List<Double> yPositions) {}
+  public record Zebra(String key,
+                      List<Double> times,
+                      List<Zebra.Team> redAlliance,
+                      List<Zebra.Team> blueAlliance) {
+    public record Team(@JsonProperty("team_key") String key,
+                       @JsonProperty("xs") List<Double> xPositions,
+                       @JsonProperty("ys") List<Double> yPositions) {}
 
     @JsonCreator
     public Zebra(@JsonProperty("key") String key, @JsonProperty("times") List<Double> times,
