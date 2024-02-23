@@ -58,17 +58,17 @@ public record Event(@JsonProperty("key") String key,
     }
   }
 
-  public static record Simple(@JsonProperty("key") String key,
-                              @JsonProperty("name") String name,
-                              @JsonProperty("event_code") String code,
-                              @JsonProperty("event_type") Type type,
-                              @JsonProperty("district") District district,
-                              @JsonProperty("city") String city,
-                              @JsonProperty("state_prov") String stateProv,
-                              @JsonProperty("country") String country,
-                              @JsonProperty("start_date") Date startDate,
-                              @JsonProperty("end_date") Date endDate,
-                              @JsonProperty("year") int year) {
+  public record Simple(@JsonProperty("key") String key,
+                       @JsonProperty("name") String name,
+                       @JsonProperty("event_code") String code,
+                       @JsonProperty("event_type") Type type,
+                       @JsonProperty("district") District district,
+                       @JsonProperty("city") String city,
+                       @JsonProperty("state_prov") String stateProv,
+                       @JsonProperty("country") String country,
+                       @JsonProperty("start_date") Date startDate,
+                       @JsonProperty("end_date") Date endDate,
+                       @JsonProperty("year") int year) {
 
     public static Endpoint<Event.Simple> endpointForKey(String eventKey) {
       return Endpoint.forSingle("/event/" + eventKey + "/simple", Event.Simple.class);
@@ -92,33 +92,33 @@ public record Event(@JsonProperty("key") String key,
     }
   }
 
-  public static record PlayoffAlliance(@JsonProperty("name") String name,
-                                       @JsonProperty("backup") Backup backup,
-                                       @JsonProperty("declines") List<String> declinedTeams,
-                                       @JsonProperty("picks") List<String> teams,
-                                       @JsonProperty("status") Status status) {
-    public static record Backup(@JsonProperty("in") String teamIn,
-                                @JsonProperty("out") String teamOut) {}
+  public record PlayoffAlliance(@JsonProperty("name") String name,
+                                @JsonProperty("backup") Backup backup,
+                                @JsonProperty("declines") List<String> declinedTeams,
+                                @JsonProperty("picks") List<String> teams,
+                                @JsonProperty("status") Status status) {
+    public record Backup(@JsonProperty("in") String teamIn,
+                         @JsonProperty("out") String teamOut) {}
 
-    public static record Status(@JsonProperty("playoff_average") double playoffAverage,
-                                @JsonProperty("level") String level,
-                                @JsonProperty("record") WinLossRecord totalRecord,
-                                @JsonProperty("current_level_record") WinLossRecord currentRecord,
-                                @JsonProperty("status") String statusStr) {}
+    public record Status(@JsonProperty("playoff_average") double playoffAverage,
+                         @JsonProperty("level") String level,
+                         @JsonProperty("record") WinLossRecord totalRecord,
+                         @JsonProperty("current_level_record") WinLossRecord currentRecord,
+                         @JsonProperty("status") String statusStr) {}
 
     public static Endpoint<List<PlayoffAlliance>> endpointForKey(String eventKey) {
       return Endpoint.forList("/event/" + eventKey + "/alliance", PlayoffAlliance.class);
     }
   }
 
-  public static record WinLossRecord(@JsonProperty("losses") int losses,
-                                     @JsonProperty("wins") int wins,
-                                     @JsonProperty("ties") int ties) {}
+  public record WinLossRecord(@JsonProperty("losses") int losses,
+                              @JsonProperty("wins") int wins,
+                              @JsonProperty("ties") int ties) {}
 
-  public static record Webcast(@JsonProperty("type") Type type,
-                               @JsonProperty("channel") String channel,
-                               @JsonProperty("date") Date date,
-                               @JsonProperty("file") String file) {
+  public record Webcast(@JsonProperty("type") Type type,
+                        @JsonProperty("channel") String channel,
+                        @JsonProperty("date") Date date,
+                        @JsonProperty("file") String file) {
     public enum Type {
       YOUTUBE("youtube"),
       TWITCH("twitch"),
@@ -145,53 +145,53 @@ public record Event(@JsonProperty("key") String key,
     }
   }
 
-  public static record DistrictPoints(@JsonProperty("points") Map<Integer, Data> points,
-                                      @JsonProperty("tiebreakers") Map<Integer, TieBreaker> tiebreakers) {
-    public static record Data(@JsonProperty("total") int totalPoints,
-                              @JsonProperty("alliance_points") int alliancePoints,
-                              @JsonProperty("elim_points") int eliminationPoints,
-                              @JsonProperty("award_points") int awardPoints,
-                              @JsonProperty("qual_points") int qualificationPoints) {}
+  public record DistrictPoints(@JsonProperty("points") Map<Integer, Data> points,
+                               @JsonProperty("tiebreakers") Map<Integer, TieBreaker> tiebreakers) {
+    public record Data(@JsonProperty("total") int totalPoints,
+                       @JsonProperty("alliance_points") int alliancePoints,
+                       @JsonProperty("elim_points") int eliminationPoints,
+                       @JsonProperty("award_points") int awardPoints,
+                       @JsonProperty("qual_points") int qualificationPoints) {}
 
-    public static record TieBreaker(@JsonProperty("highest_qual_scores") List<Integer> highestQualScores,
-                                    @JsonProperty("qual_wins") int qualificationWins) {}
+    public record TieBreaker(@JsonProperty("highest_qual_scores") List<Integer> highestQualScores,
+                             @JsonProperty("qual_wins") int qualificationWins) {}
 
     public static Endpoint<DistrictPoints> endpointForKey(String eventKey) {
       return Endpoint.forSingle("/event/" + eventKey + "/district_points", DistrictPoints.class);
     }
   }
 
-  public static record Rankings(@JsonProperty("rankings") List<Event.Rankings.Team> rankings,
-                                @JsonProperty("extra_stats_info") List<DataInfo> extraStats,
-                                @JsonProperty("sort_order_info") List<DataInfo> sortOrder) {
-    public static record Team(@JsonProperty("matches_played") int matchesPlayed,
-                              @JsonProperty("qual_average") Integer averageMatchScore,
-                              @JsonProperty("extra_stats") List<Integer> extraStats,
-                              @JsonProperty("sort_orders") List<Integer> sortOrders,
-                              @JsonProperty("record") WinLossRecord winLossRecord,
-                              @JsonProperty("rank") int rank,
-                              @JsonProperty("dq") int disqualificationCount,
-                              @JsonProperty("team_key") String teamKey) {}
+  public record Rankings(@JsonProperty("rankings") List<Event.Rankings.Team> rankings,
+                         @JsonProperty("extra_stats_info") List<DataInfo> extraStats,
+                         @JsonProperty("sort_order_info") List<DataInfo> sortOrder) {
+    public record Team(@JsonProperty("matches_played") int matchesPlayed,
+                       @JsonProperty("qual_average") Integer averageMatchScore,
+                       @JsonProperty("extra_stats") List<Integer> extraStats,
+                       @JsonProperty("sort_orders") List<Integer> sortOrders,
+                       @JsonProperty("record") WinLossRecord winLossRecord,
+                       @JsonProperty("rank") int rank,
+                       @JsonProperty("dq") int disqualificationCount,
+                       @JsonProperty("team_key") String teamKey) {}
 
-    public static record DataInfo(@JsonProperty("precision") int precision,
-                                  @JsonProperty("name") String name) {}
+    public record DataInfo(@JsonProperty("precision") int precision,
+                           @JsonProperty("name") String name) {}
 
     public static Endpoint<Event.Rankings> endpointForEvent(String eventKey) {
       return Endpoint.forSingle("/event/" + eventKey + "/rankings", Event.Rankings.class);
     }
   }
 
-  public static record OPRs(@JsonProperty("oprs") Map<String, Double> oprs,
-                            @JsonProperty("dprs") Map<String, Double> dprs,
-                            @JsonProperty("ccwms") Map<String, Double> ccwms) {
+  public record OPRs(@JsonProperty("oprs") Map<String, Double> oprs,
+                     @JsonProperty("dprs") Map<String, Double> dprs,
+                     @JsonProperty("ccwms") Map<String, Double> ccwms) {
     public static Endpoint<Event.OPRs> endpointForEvent(String eventKey) {
       return Endpoint.forSingle("/event/" + eventKey + "/oprs", Event.OPRs.class);
     }
   }
 
-  public static record Date(int year,
-                            int month,
-                            int day)
+  public record Date(int year,
+                     int month,
+                     int day)
       implements Comparable<Date> {
 
     @JsonCreator

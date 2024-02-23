@@ -47,13 +47,13 @@ public record Team(@JsonProperty("key") String key,
     }
   }
 
-  public static record Simple(@JsonProperty("key") String key,
-                              @JsonProperty("team_number") int number,
-                              @JsonProperty("nickname") String name,
-                              @JsonProperty("name") String fullName,
-                              @JsonProperty("city") String city,
-                              @JsonProperty("state_prov") String province,
-                              @JsonProperty("country") String country) {
+  public record Simple(@JsonProperty("key") String key,
+                       @JsonProperty("team_number") int number,
+                       @JsonProperty("nickname") String name,
+                       @JsonProperty("name") String fullName,
+                       @JsonProperty("city") String city,
+                       @JsonProperty("state_prov") String province,
+                       @JsonProperty("country") String country) {
 
     public static Endpoint<Team.Simple> endpointForKey(String teamKey) {
       return Endpoint.forSingle("/team/" + teamKey + "/simple", Team.Simple.class);
@@ -76,34 +76,34 @@ public record Team(@JsonProperty("key") String key,
     }
   }
 
-  public static record Robot(@JsonProperty("year") int year,
-                             @JsonProperty("robot_name") String name,
-                             @JsonProperty("key") String key,
-                             @JsonProperty("team_key") String teamKey) {
+  public record Robot(@JsonProperty("year") int year,
+                      @JsonProperty("robot_name") String name,
+                      @JsonProperty("key") String key,
+                      @JsonProperty("team_key") String teamKey) {
     public static Endpoint<List<Robot>> endpointForTeam(String teamKey) {
       return Endpoint.forList("/team/" + teamKey + "/robots", Robot.class);
     }
   }
 
-  public static record EventStatus(@JsonProperty("qual") Rank qualificationRank,
-                                   @JsonProperty("alliance") Alliance alliance,
-                                   @JsonProperty("playoff") Status playoff,
-                                   @JsonProperty("alliance_status_str") String allianceStatusHTML,
-                                   @JsonProperty("playoff_status_str") String playoffStatusHTML,
-                                   @JsonProperty("overall_status_str") String overallStatusHTML,
-                                   @JsonProperty("next_match_key") String nextMatchKey,
-                                   @JsonProperty("last_match_key") String lastMatchKey) {
-    public static record Rank(@JsonProperty("num_teams") int teamCount,
-                              @JsonProperty("ranking") Event.Rankings.Team ranking,
-                              @JsonProperty("sort_order_info") List<DataInfo> sortOrderInfo,
-                              @JsonProperty("status") String status) {}
+  public record EventStatus(@JsonProperty("qual") Rank qualificationRank,
+                            @JsonProperty("alliance") Alliance alliance,
+                            @JsonProperty("playoff") Status playoff,
+                            @JsonProperty("alliance_status_str") String allianceStatusHTML,
+                            @JsonProperty("playoff_status_str") String playoffStatusHTML,
+                            @JsonProperty("overall_status_str") String overallStatusHTML,
+                            @JsonProperty("next_match_key") String nextMatchKey,
+                            @JsonProperty("last_match_key") String lastMatchKey) {
+    public record Rank(@JsonProperty("num_teams") int teamCount,
+                       @JsonProperty("ranking") Event.Rankings.Team ranking,
+                       @JsonProperty("sort_order_info") List<DataInfo> sortOrderInfo,
+                       @JsonProperty("status") String status) {}
 
-    public static record Alliance(@JsonProperty("name") String name,
-                                  @JsonProperty("number") int num,
-                                  @JsonProperty("backup") Backup backup,
-                                  @JsonProperty("pick") int pick) {
-      public static record Backup(@JsonProperty("out") String out,
-                                  @JsonProperty("in") String in) {}
+    public record Alliance(@JsonProperty("name") String name,
+                           @JsonProperty("number") int num,
+                           @JsonProperty("backup") Backup backup,
+                           @JsonProperty("pick") int pick) {
+      public record Backup(@JsonProperty("out") String out,
+                           @JsonProperty("in") String in) {}
     }
 
     public static Endpoint<Map<String, EventStatus>> endpointForEvent(String eventKey) {

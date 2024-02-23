@@ -11,8 +11,8 @@ public record Award(@JsonProperty("name") String name,
                     @JsonProperty("event_key") String eventKey,
                     @JsonProperty("recipient_list") List<Recipient> recipients,
                     @JsonProperty("year") int year) {
-  public static record Recipient(@JsonProperty("team_key") String teamKey,
-                                 @JsonProperty("awardee") String awardee) {}
+  public record Recipient(@JsonProperty("team_key") String teamKey,
+                          @JsonProperty("awardee") String awardee) {}
 
   public enum Type {
     CHAIRMANS(0),
