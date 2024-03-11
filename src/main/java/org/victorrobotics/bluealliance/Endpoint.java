@@ -83,26 +83,28 @@ public final class Endpoint<T> implements Supplier<Optional<T>> {
   }
 
   private void update(Response response) {
-    int statusCode = response.code();
-    if (statusCode != 200 && statusCode != 304) return;
+    try (response) {
+      int statusCode = response.code();
+      if (statusCode != 200 && statusCode != 304) return;
 
-    String etag = response.headers()
-                          .get("etag");
-    if (etag != null) {
-      requestBuilder.header("If-None-Match", etag);
-    }
-
-    if (statusCode != 200) return;
-
-    try (InputStream body = response.body()
-                                    .byteStream()) {
-      T result = jsonReader.readValue(body);
-      if (value.isEmpty() || !value.get()
-                                   .equals(result)) {
-        value = Optional.of(result);
+      String etag = response.headers()
+                            .get("etag");
+      if (etag != null) {
+        requestBuilder.header("If-None-Match", etag);
       }
-    } catch (IOException e) {
-      e.printStackTrace();
+
+      if (statusCode != 200) return;
+
+      try (InputStream body = response.body()
+                                      .byteStream()) {
+        T result = jsonReader.readValue(body);
+        if (value.isEmpty() || !value.get()
+                                     .equals(result)) {
+          value = Optional.of(result);
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 
